@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/games/shared-player-theme.css">
+    <link rel="stylesheet" href="/games/event-videos.css">
+    <script src="/games/shared-player-theme.js"></script>
+    <link rel="stylesheet" href="/games/dart-callout.css">
+    <script src="/games/dart-callout.js"></script>
+    <script src="/games/event-videos.js"></script>
+    <title>Harper Wins</title>
+    <style>
+        :root {
+            /* Warm brick / cardinal — away from Killer wine, miss coral, Q10 ice */
+            --ink: #140808;
+            --fog: #f5ebe4;
+            --frame: #e8c9a0;
+            --frame-soft: #f0dcc4;
+            --panel: rgba(20, 8, 8, 0.55);
+            --hit: #3ecf7a;
+            --miss: #e85d5d;
+            --free: #f0c45a;
+            --frame-rgb: 232, 201, 160;
+            --fog-rgb: 245, 235, 228;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            --page-bg: radial-gradient(circle at 50% 28%, #c24a3a 0%, #8b2e28 40%, #3d1412 75%, #120808 100%);
+            background: var(--page-bg);
+            color: var(--fog);
+            font-family: var(--fc-font);
+            overflow: hidden; user-select: none;
+            box-sizing: border-box;
+        }
+
+        .master-frame {
+            position: absolute;
+            top: 15px; left: 15px; right: 15px; bottom: 15px;
+            border: 4px solid var(--frame);
+            border-radius: 12px;
+            box-sizing: border-box;
+            pointer-events: none;
+            z-index: 90;
+        }
+        .master-frame::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 2px dotted var(--frame);
+            border-radius: 8px;
+        }
+        .window-game-title {
+            position: absolute;
+            bottom: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--frame);
+            padding: 2px 20px;
+            font-size: 1.05rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            z-index: 100;
+            border-left: 4px solid var(--frame);
+            border-right: 4px solid var(--frame);
+        }
+
+        .arena {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 28px 48px;
+            gap: 14px;
+            z-index: 5;
+        }
+
+        .top-bar {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+        .top-bar .mode {
+            font-size: 0.85rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(var(--fog-rgb), 0.65);
+        }
+        .top-bar .round {
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--frame);
+        }
+
+        .board {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .col {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 12px 10px;
+            border-radius: 12px;
+            background: var(--panel);
+            border: 2px solid rgba(var(--frame-rgb), 0.35);
+            transition: opacity 0.25s ease, border-color 0.25s ease;
+        }
+        .col.is-harper {
+            border-color: rgba(240, 196, 90, 0.65);
+            background: rgba(28, 10, 10, 0.58);
+        }
+        .col.is-active {
+            border-color: var(--frame);
+            box-shadow: 0 0 0 2px rgba(var(--frame-rgb), 0.35);
+        }
+        .col.is-out {
+            opacity: 0.38;
+            filter: grayscale(0.7);
+        }
+
+        .col-head {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+        }
+        .col-head .fc-player-badge {
+            margin-bottom: 4px;
+        }
+        .col.is-harper .col-head .fc-player-badge .avatar-box {
+            border-color: var(--free);
+        }
+        .col.is-harper .col-head .fc-player-badge .player-name-plate {
+            background-color: var(--free);
+            color: #3a2a08;
+        }
+        .col-head .pts {
+            font-size: 1.8rem;
+            font-weight: 900;
+            font-variant-numeric: tabular-nums;
+            color: var(--fog);
+            line-height: 1;
+            margin-top: 2px;
+        }
+        .col-head .pts-lbl {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(var(--fog-rgb), 0.5);
+            font-weight: 900;
+        }
+
+        .history {
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 4px 4px 8px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(var(--frame-rgb), 0.45) transparent;
+        }
+        .history::-webkit-scrollbar { width: 6px; }
+        .history::-webkit-scrollbar-thumb {
+            background: rgba(var(--frame-rgb), 0.4);
+            border-radius: 6px;
+        }
+
+        .visit-row {
+            display: flex;
+            align-items: stretch;
+            gap: 4px;
+            flex: 0 0 auto;
+        }
+        .visit-row.is-live {
+            outline: 2px solid rgba(var(--frame-rgb), 0.85);
+            outline-offset: 3px;
+            border-radius: 10px;
+        }
+
+        .dart-cell {
+            flex: 1 1 0;
+            min-width: 0;
+            min-height: 48px;
+            border-radius: 8px;
+            border: 2px solid rgba(0,0,0,0.35);
+            background: rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            font-weight: 900;
+            color: rgba(var(--fog-rgb), 0.3);
+        }
+        .dart-cell.waiting::after { content: '—'; font-size: 1.1rem; opacity: 0.5; }
+        .dart-cell.filled { color: var(--fog); background: rgba(0,0,0,0.4); }
+        .dart-cell.hit {
+            background: rgba(62, 207, 122, 0.28);
+            border-color: rgba(62, 207, 122, 0.75);
+            color: #d8ffe8;
+        }
+        .dart-cell.miss {
+            background: rgba(232, 93, 93, 0.28);
+            border-color: rgba(232, 93, 93, 0.75);
+            color: #ffd0d0;
+        }
+        .dart-cell.free, .dart-cell.set.free {
+            background: rgba(240, 196, 90, 0.3);
+            border-color: rgba(240, 196, 90, 0.8);
+            color: #fff3c8;
+        }
+        .dart-cell.set {
+            background: rgba(var(--frame-rgb), 0.18);
+            border-color: rgba(var(--frame-rgb), 0.55);
+            color: var(--fog);
+        }
+        .dart-cell .lbl {
+            font-size: 0.55rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.55;
+        }
+        .dart-cell .val {
+            font-size: 1.15rem;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(18, 6, 6, 0.72);
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .overlay.visible { display: flex; }
+        .overlay-card {
+            width: min(720px, 100%);
+            background: rgba(20, 8, 8, 0.96);
+            border: 3px solid var(--frame);
+            border-radius: 14px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+        }
+        .overlay-card h2 {
+            margin: 0 0 10px;
+            color: var(--frame);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 1.8rem;
+        }
+        .overlay-card .sub {
+            color: rgba(255,240,244,0.7);
+            font-weight: 700;
+            font-size: 1.15rem;
+            line-height: 1.4;
+        }
+        .overlay-card.win-players h2 { color: var(--free); font-size: 2rem; }
+        .overlay-card.win-harper h2 { color: var(--frame); }
+
+        /* Event takeover — avatar/message left, video right (miss, etc.) */
+        .hw-takeover {
+            position: fixed;
+            inset: 0;
+            z-index: 500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-sizing: border-box;
+            pointer-events: none;
+            background: rgba(18, 6, 6, 0.88);
+        }
+        .hw-takeover.active {
+            display: flex;
+            pointer-events: auto;
+            animation: hwFadeIn 0.28s ease forwards;
+        }
+        @keyframes hwFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .hw-takeover .fd-winner-split {
+            flex-direction: row;
+            justify-content: stretch;
+            width: 100%;
+            height: 100%;
+            padding: 48px 36px;
+            gap: 28px;
+        }
+        .hw-takeover .fd-winner-stage {
+            flex: 1 1 50%;
+            height: 100%;
+        }
+        .hw-takeover .fd-winner-video-pane {
+            display: none;
+        }
+        .hw-takeover.mode-miss:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-elim:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-push:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-harper_minus1:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-harper_minus2:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-harper_triple:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-harper_double:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-harper_bullseye:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-players_win:not(.video-off) .fd-winner-video-pane,
+        .hw-takeover.mode-harper_win:not(.video-off) .fd-winner-video-pane {
+            display: flex;
+        }
+        .hw-takeover.mode-elim .hw-badge {
+            color: var(--miss);
+            border-color: var(--miss);
+            background: rgba(232, 93, 93, 0.12);
+        }
+        .hw-takeover.mode-push .hw-badge {
+            color: var(--free);
+            border-color: var(--free);
+        }
+        .hw-takeover.mode-harper_minus1 .hw-badge,
+        .hw-takeover.mode-harper_minus2 .hw-badge {
+            color: var(--hit);
+            border-color: var(--hit);
+        }
+        .hw-takeover.mode-harper_triple .hw-badge {
+            color: #7ec8ff;
+            border-color: #7ec8ff;
+        }
+        .hw-takeover.mode-harper_double .hw-badge {
+            color: #c9a0ff;
+            border-color: #c9a0ff;
+        }
+        .hw-takeover.mode-harper_bullseye .hw-badge {
+            color: #ffd76a;
+            border-color: #ffd76a;
+        }
+        .hw-takeover.mode-players_win .hw-badge {
+            color: var(--free);
+            border-color: var(--free);
+        }
+        .hw-takeover.mode-players_win .hw-name {
+            color: var(--free);
+            font-size: 2rem;
+        }
+        .hw-takeover.mode-harper_win .hw-badge {
+            color: var(--frame);
+            border-color: var(--frame);
+        }
+        .hw-takeover.mode-harper_win .hw-name {
+            color: var(--frame);
+        }
+        .hw-takeover.mode-next .hw-badge {
+            color: var(--frame);
+            border-color: var(--frame);
+        }
+        .hw-card {
+            position: relative;
+            z-index: 3;
+            width: min(480px, 92%);
+            padding: 34px 36px 38px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            background: linear-gradient(160deg, rgba(40, 14, 14, 0.97) 0%, rgba(16, 6, 6, 0.98) 100%);
+            border: 3px solid var(--frame);
+            border-radius: 14px;
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
+        }
+        .hw-eyebrow {
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(232, 201, 160, 0.7);
+        }
+        .hw-badge {
+            font-size: 1.1rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--miss);
+            border: 2px solid var(--miss);
+            border-radius: 999px;
+            padding: 6px 18px;
+        }
+        .hw-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid var(--frame);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+            background: rgba(0, 0, 0, 0.35);
+        }
+        .hw-avatar img, .hw-avatar .initials {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            font-weight: 900;
+            color: var(--fog);
+        }
+        .hw-name {
+            margin: 0;
+            font-size: 2.4rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--fog);
+        }
+        .hw-quip {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--frame-soft);
+        }
+        .hw-sub {
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(245, 235, 228, 0.65);
+        }
+
+        .help-overlay-board {
+            position: absolute;
+            top: 80px; left: 50%; transform: translateX(-50%);
+            background: rgba(20, 8, 8, 0.95);
+            border: 2px solid var(--frame);
+            border-radius: 2px; padding: 20px 40px;
+            width: 560px; max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.55); z-index: 10000;
+            display: none; text-align: center;
+        }
+        .help-overlay-board.visible { display: block; }
+        .help-overlay-board h3 { color: var(--frame); margin-top: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .help-overlay-board p { font-size: 0.95rem; color: #ddd; line-height: 1.5; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="master-frame">
+        <div class="window-game-title">Harper Wins</div>
+    </div>
+
+    <div class="help-overlay-board" id="helpOverlayCard">
+        <h3>Harper Wins</h3>
+        <p>• Harper sets three darts (S/D/T and bulls count). Everyone else must hit the same bed in the same order.</p>
+        <p>• If Harper misses the board: that slot is FREE (always greens) and Harper loses 1 point per miss.</p>
+        <p>• 3 hits: Harper −2. 2 hits: Harper −1. 1: push. 0: you −1 and Harper +1.</p>
+        <p>• Everyone starts at 5 points. Hit 0 and you’re out. Knock Harper to 0 and the players win!</p>
+    </div>
+
+    <div class="arena">
+        <div class="top-bar">
+            <div class="mode" id="modeLabel">Match the bed</div>
+            <div class="round" id="roundLabel">Round 1</div>
+        </div>
+        <div class="board" id="board"></div>
+    </div>
+
+    <div class="overlay" id="winnerOverlay">
+        <div class="overlay-card" id="winnerCard">
+            <h2 id="winnerHeadline">Winner</h2>
+            <p class="sub" id="winnerSub"></p>
+        </div>
+    </div>
+
+    <div class="hw-takeover" id="hwEventOverlay" style="--fd-winner-video-border: #e8c9a0;">
+        <div class="fd-winner-split">
+            <div class="fd-winner-stage">
+                <div class="hw-card">
+                    <div class="hw-eyebrow" id="hwEyebrow">Zero Hits</div>
+                    <div class="hw-badge" id="hwBadge">MISS</div>
+                    <div class="hw-avatar" id="hwAvatar"></div>
+                    <h1 class="hw-name" id="hwName">PLAYER</h1>
+                    <p class="hw-quip" id="hwQuip">You −1 · Harper +1</p>
+                    <div class="hw-sub" id="hwSub"></div>
+                </div>
+            </div>
+            <div class="fd-winner-video-pane">
+                <video id="hwEventVideo" class="fd-event-video" playsinline preload="auto"></video>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function avatarHtml(avatar, name) {
+            if (window.FC_renderAvatarHtml) return FC_renderAvatarHtml(avatar, name);
+            return `<div class="initials">${escapeHtml((name || '?').slice(0, 2).toUpperCase())}</div>`;
+        }
+
+        function playerBadgeHtml(player, idx, isActive) {
+            if (typeof window.FC_renderPlayerBadge === 'function') {
+                return FC_renderPlayerBadge(player.avatar, player.name, {
+                    colorIndex: idx,
+                    orbit: !!isActive
+                });
+            }
+            return `<div class="av">${avatarHtml(player.avatar, player.name)}</div>
+                <div class="name">${escapeHtml(player.name || 'PLAYER')}</div>`;
+        }
+
+        function dartLabel(dart) {
+            if (!dart) return '';
+            if (dart.free) return 'FREE';
+            if (dart.miss) return 'MISS';
+            if (dart.label) return String(dart.label);
+            const mult = Number(dart.multiplier) || 1;
+            if (dart.number === 'bull') return mult === 2 ? 'DBULL' : 'BULL';
+            const prefix = mult === 3 ? 'T' : mult === 2 ? 'D' : 'S';
+            return `${prefix}${dart.number}`;
+        }
+
+        function cellHtml(dart, mark, index) {
+            if (!dart && !mark) {
+                return `<div class="dart-cell waiting"></div>`;
+            }
+            // FREE is Harper's pattern only (mark/dart.free) — player bounce-outs stay MISS
+            const isFree = mark === 'free' || !!(dart && dart.free);
+            const markClass = mark === 'hit' ? 'hit'
+                : (mark === 'miss' ? 'miss'
+                    : (isFree ? 'free' : (mark === 'set' || dart ? 'set' : '')));
+            let val = '—';
+            if (isFree) val = 'FREE';
+            else if (dart && dart.miss) val = 'MISS';
+            else if (dart) val = dartLabel(dart);
+            return `<div class="dart-cell filled ${markClass}">
+                <div class="val">${escapeHtml(val)}</div>
+            </div>`;
+        }
+
+        function visitRowHtml(darts, marks, isLive) {
+            const d = Array.isArray(darts) ? darts : [];
+            const m = Array.isArray(marks) ? marks : [];
+            let html = `<div class="visit-row ${isLive ? 'is-live' : ''}">`;
+            for (let i = 0; i < 3; i++) {
+                html += cellHtml(d[i] || null, m[i] || null, i);
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function renderBoard(gd) {
+            const board = document.getElementById('board');
+            if (!board) return;
+            const players = Array.isArray(gd.players) ? gd.players : [];
+            const activeIdx = gd.activeIdx;
+            let html = '';
+            players.forEach((p, idx) => {
+                const isActive = gd.phase && gd.phase.type === 'playing' && idx === activeIdx;
+                const classes = [
+                    'col',
+                    p.isHarper ? 'is-harper' : '',
+                    isActive ? 'is-active' : '',
+                    p.eliminated ? 'is-out' : ''
+                ].filter(Boolean).join(' ');
+                const history = Array.isArray(p.visitHistory) ? p.visitHistory : [];
+                const liveDarts = Array.isArray(p.visitDarts) ? p.visitDarts : [];
+                const liveMarks = Array.isArray(p.visitMarks) ? p.visitMarks : [];
+
+                html += `<div class="${classes}">`;
+                html += `<div class="col-head">
+                    ${playerBadgeHtml(p, idx, isActive)}
+                    <div class="pts">${escapeHtml(p.points)}</div>
+                    <div class="pts-lbl">Points</div>
+                </div>`;
+                html += `<div class="history" data-player-history="${escapeHtml(p.id || idx)}">`;
+                // Current visit always on top; outline only while this player is throwing
+                html += visitRowHtml(liveDarts, liveMarks, isActive);
+                history.forEach((visit) => {
+                    html += visitRowHtml(visit.darts, visit.marks, false);
+                });
+                html += '</div></div>';
+            });
+            board.innerHTML = html;
+
+            // Keep the live (top) row in view; history stacks below
+            board.querySelectorAll('.history').forEach((el) => {
+                el.scrollTop = 0;
+            });
+        }
+
+        let lastPhaseKey = null;
+        const MISS_VIDEO_URL = '/assets/harperwins/miss.mp4';
+        const PUSH_VIDEO_URLS = [
+            '/assets/harperwins/push-1.mp4',
+            '/assets/harperwins/push-2.mp4',
+            '/assets/harperwins/push-3.mp4',
+            '/assets/harperwins/push-4.mp4'
+        ];
+        const ELIM_VIDEO_URLS = [
+            '/assets/harperwins/elim-1.mp4',
+            '/assets/harperwins/elim-2.mp4'
+        ];
+        const HARPER_MINUS1_VIDEO_URL = '/assets/harperwins/harper-minus1.mp4';
+        const HARPER_MINUS2_VIDEO_URL = '/assets/harperwins/harper-minus2.mp4';
+        const HARPER_TRIPLE_VIDEO_URL = '/assets/harperwins/harper-triple.mp4';
+        const HARPER_DOUBLE_VIDEO_URL = '/assets/harperwins/harper-double.mp4';
+        const HARPER_BULLSEYE_VIDEO_URL = '/assets/harperwins/harper-bullseye.mp4';
+        const PLAYERS_WIN_VIDEO_URL = '/assets/harperwins/players-win.mp4';
+        const HARPER_WIN_VIDEO_URLS = [
+            '/assets/harperwins/harper-win-1.mp4',
+            '/assets/harperwins/harper-win-2.mp4'
+        ];
+
+        function pickUrl(urls) {
+            if (!urls || !urls.length) return null;
+            return urls[Math.floor(Math.random() * urls.length)];
+        }
+
+        function hideHwEventOverlay() {
+            const screen = document.getElementById('hwEventOverlay');
+            if (!screen) return;
+            if (window.FlightDeckWinnerVideo) FlightDeckWinnerVideo.stopIn(screen);
+            screen.className = 'hw-takeover';
+        }
+
+        function showHwEventOverlay(mode, data, videoUrl) {
+            const screen = document.getElementById('hwEventOverlay');
+            if (!screen) return;
+            if (window.FlightDeckWinnerVideo) FlightDeckWinnerVideo.stopIn(screen);
+            screen.className = 'hw-takeover active mode-' + mode;
+            if (window.FlightDeckWinnerVideo) {
+                FlightDeckWinnerVideo.applyScreenClass(screen);
+            }
+
+            if (mode === 'miss') {
+                document.getElementById('hwEyebrow').textContent = 'Zero Hits';
+                document.getElementById('hwBadge').textContent = 'MISS';
+                document.getElementById('hwQuip').textContent = 'You −1 · Harper +1';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.playerName || 'PLAYER';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.avatar, data.playerName);
+            } else if (mode === 'elim') {
+                document.getElementById('hwEyebrow').textContent = 'Eliminated';
+                document.getElementById('hwBadge').textContent = 'OUT';
+                document.getElementById('hwQuip').textContent = 'Hit zero points';
+                document.getElementById('hwSub').textContent = 'Harper wins this one';
+                document.getElementById('hwName').textContent = data.playerName || 'PLAYER';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.avatar, data.playerName);
+            } else if (mode === 'push') {
+                document.getElementById('hwEyebrow').textContent = 'One Hit';
+                document.getElementById('hwBadge').textContent = 'PUSH';
+                document.getElementById('hwQuip').textContent = 'No points change';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.playerName || 'PLAYER';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.avatar, data.playerName);
+            } else if (mode === 'harper_minus1') {
+                document.getElementById('hwEyebrow').textContent = 'Two Hits';
+                document.getElementById('hwBadge').textContent = 'HARPER −1';
+                document.getElementById('hwQuip').textContent = (data.playerName || 'PLAYER') + ' lands 2';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.harperName || 'Harper';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.harperAvatar, data.harperName || 'Harper');
+            } else if (mode === 'harper_minus2') {
+                document.getElementById('hwEyebrow').textContent = 'Three Hits';
+                document.getElementById('hwBadge').textContent = 'HARPER −2';
+                document.getElementById('hwQuip').textContent = (data.playerName || 'PLAYER') + ' cleans it!';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.harperName || 'Harper';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.harperAvatar, data.harperName || 'Harper');
+            } else if (mode === 'harper_triple') {
+                document.getElementById('hwEyebrow').textContent = 'Pattern Dart';
+                document.getElementById('hwBadge').textContent = 'TRIPLE';
+                document.getElementById('hwQuip').textContent = data.label || 'TRIPLE';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.playerName || 'Harper';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.avatar, data.playerName || 'Harper');
+            } else if (mode === 'harper_double') {
+                document.getElementById('hwEyebrow').textContent = 'Pattern Dart';
+                document.getElementById('hwBadge').textContent = 'DOUBLE';
+                document.getElementById('hwQuip').textContent = data.label || 'DOUBLE';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.playerName || 'Harper';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.avatar, data.playerName || 'Harper');
+            } else if (mode === 'harper_bullseye') {
+                document.getElementById('hwEyebrow').textContent = 'Pattern Dart';
+                document.getElementById('hwBadge').textContent = 'BULLSEYE';
+                document.getElementById('hwQuip').textContent = data.label || 'BULL';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.playerName || 'Harper';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.avatar, data.playerName || 'Harper');
+            } else if (mode === 'players_win') {
+                document.getElementById('hwEyebrow').textContent = 'Match Over';
+                document.getElementById('hwBadge').textContent = 'PLAYERS WIN';
+                document.getElementById('hwQuip').textContent = data.headline || 'You guys beat Harper?!?!?';
+                document.getElementById('hwSub').textContent = data.sub || 'How did that happen!';
+                document.getElementById('hwName').textContent = 'Squad';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(null, 'W');
+            } else if (mode === 'harper_win') {
+                document.getElementById('hwEyebrow').textContent = 'Match Over';
+                document.getElementById('hwBadge').textContent = 'HARPER WINS';
+                document.getElementById('hwQuip').textContent = data.headline || 'Harper Wins';
+                document.getElementById('hwSub').textContent = data.sub || 'Everyone else hit zero.';
+                document.getElementById('hwName').textContent = data.winnerName || 'Harper';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(data.winnerAvatar, data.winnerName || 'Harper');
+            } else if (mode === 'next') {
+                document.getElementById('hwEyebrow').textContent = 'Up Next';
+                document.getElementById('hwBadge').textContent = 'YOUR THROW';
+                document.getElementById('hwQuip').textContent = data.quip || 'Match the bed';
+                document.getElementById('hwSub').textContent = '';
+                document.getElementById('hwName').textContent = data.nextPlayerName || data.playerName || 'PLAYER';
+                document.getElementById('hwAvatar').innerHTML = avatarHtml(
+                    data.avatar,
+                    data.nextPlayerName || data.playerName || 'PLAYER'
+                );
+            }
+
+            if (window.FlightDeckWinnerVideo && videoUrl) {
+                FlightDeckWinnerVideo.playFixedIn(screen, videoUrl);
+            }
+        }
+
+        function applyGameData(gd, state) {
+            if (!gd || gd.gameType !== 'harperwins') return;
+            if (window.FlightDeckWinnerVideo && state) {
+                FlightDeckWinnerVideo.applyFromState(state);
+            }
+
+            document.getElementById('helpOverlayCard').classList.toggle('visible', !!gd.helpVisible);
+
+            document.getElementById('modeLabel').textContent = 'Match the bed';
+            document.getElementById('roundLabel').textContent = `Round ${Math.max(1, Number(gd.currentRound) || 1)}`;
+
+            const phase = gd.phase || { type: 'playing' };
+            const phaseKey = `${phase.type}-${phase.startedAt || ''}-${(phase.data && phase.data.side) || ''}`;
+            const d = phase.data || {};
+            const playersWin = phase.type === 'winner' && d.side === 'players';
+            const harperWin = phase.type === 'winner' && d.side === 'harper';
+            const winOverlay = document.getElementById('winnerOverlay');
+            winOverlay.classList.toggle('visible', false);
+
+            if (phaseKey !== lastPhaseKey) {
+                lastPhaseKey = phaseKey;
+                hideHwEventOverlay();
+                if (playersWin) {
+                    showHwEventOverlay('players_win', d, PLAYERS_WIN_VIDEO_URL);
+                } else if (harperWin) {
+                    showHwEventOverlay('harper_win', d, pickUrl(HARPER_WIN_VIDEO_URLS));
+                } else if (phase.type === 'miss') {
+                    showHwEventOverlay('miss', d, MISS_VIDEO_URL);
+                } else if (phase.type === 'elim') {
+                    showHwEventOverlay('elim', d, pickUrl(ELIM_VIDEO_URLS));
+                } else if (phase.type === 'push') {
+                    showHwEventOverlay('push', d, pickUrl(PUSH_VIDEO_URLS));
+                } else if (phase.type === 'harper_minus1') {
+                    showHwEventOverlay('harper_minus1', d, HARPER_MINUS1_VIDEO_URL);
+                } else if (phase.type === 'harper_minus2') {
+                    showHwEventOverlay('harper_minus2', d, HARPER_MINUS2_VIDEO_URL);
+                } else if (phase.type === 'harper_triple') {
+                    showHwEventOverlay('harper_triple', d, HARPER_TRIPLE_VIDEO_URL);
+                } else if (phase.type === 'harper_double') {
+                    showHwEventOverlay('harper_double', d, HARPER_DOUBLE_VIDEO_URL);
+                } else if (phase.type === 'harper_bullseye') {
+                    showHwEventOverlay('harper_bullseye', d, HARPER_BULLSEYE_VIDEO_URL);
+                } else if (phase.type === 'intermission' || phase.type === 'next') {
+                    showHwEventOverlay('next', d, null);
+                }
+            }
+
+            renderBoard(gd);
+        }
+
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            if (!data || data.type !== 'SYNC_STATE' || !data.state) return;
+            applyGameData(data.state.gameData, data.state);
+        });
+    </script>
+</body>
+</html>

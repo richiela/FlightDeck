@@ -1,0 +1,58 @@
+no-harper.mp4
+Source: local clip (IMG_9327.MOV)
+Notes: Section 0:16.5–end (~2.5s), re-encoded H.264/AAC 1920×1080.
+Played on Viewer when starting Harper Wins without a player named Harper (Video mode on).
+
+miss.mp4
+Source: local clip (IMG_9328.MOV)
+Notes: Section 0:02–0:04 (~2.0s), re-encoded H.264/AAC.
+Played on Harper Wins "miss" (0 hits) event overlay when Viewer Video mode is on.
+
+elim-1.mp4 … elim-2.mp4
+Source: local clip (IMG_9335.MOV)
+Notes: Randomized on Harper Wins player elimination (0 hits → 0 points) when Viewer Video mode is on.
+  elim-1: 0:42–end (~2.5s)
+  elim-2: 0:23.5–0:27 (~3.5s)
+
+push-1.mp4 … push-4.mp4
+Source: local clip (IMG_9329.MOV)
+Notes: Randomized on Harper Wins "push" (1 hit) overlay when Viewer Video mode is on.
+  push-1: 0:01–0:04 (~3.0s)
+  push-2: 0:06–0:08.5 (~2.5s)
+  push-3: 0:10–0:12.5 (~2.5s)
+  push-4: 0:13–0:16 (~3.0s)
+
+harper-minus1.mp4
+Source: local clip (IMG_9330.MOV)
+Notes: Section 0:15–0:18 (~2.5s), re-encoded H.264/AAC.
+Played on Harper Wins "harper −1" (2 hits) event overlay when Viewer Video mode is on.
+
+harper-minus2.mp4
+Source: local clip (IMG_9331.MOV)
+Notes: Section 0:00.5–0:05 (~4.5s), re-encoded H.264/AAC.
+Played on Harper Wins "harper −2" (3 hits) event overlay when Viewer Video mode is on.
+
+harper-triple.mp4
+Source: local clip (IMG_9332.MOV)
+Notes: Section 0:06–0:09 (~3.0s), re-encoded H.264/AAC.
+Played mid-turn when Harper lands a triple while setting the pattern (Video mode on).
+
+harper-double.mp4
+Source: local clip (IMG_9333.MOV)
+Notes: Section 0:00–0:03 (~3.0s), re-encoded H.264/AAC.
+Played mid-turn when Harper lands a double (number beds only) while setting the pattern (Video mode on).
+
+harper-bullseye.mp4
+Source: local clip (IMG_9334.MOV)
+Notes: Section 0:01–0:04 (~3.0s), re-encoded H.264/AAC.
+Played mid-turn when Harper hits outer bull or double bull while setting the pattern (Video mode on; takes priority over Double).
+
+players-win.mp4
+Source: local clip (IMG_9336.MOV)
+Notes: Section 0:11.5–end (~3.8s), re-encoded H.264/AAC.
+Played on Harper Wins players-win winner overlay when Viewer Video mode is on.
+
+harper-win-1.mp4 … harper-win-2.mp4
+Notes: Randomized on Harper Wins harper-win winner overlay when Viewer Video mode is on.
+  harper-win-1: IMG_9340.MOV full clip (~5.4s)
+  harper-win-2: IMG_9339.MOV 0:18–end (~5.7s)

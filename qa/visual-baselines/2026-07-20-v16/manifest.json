@@ -1,0 +1,80 @@
+{
+  "capturedAt": "2026-07-20T23:45:25.565Z",
+  "port": 4000,
+  "resolution": "1920x1080",
+  "videoEnabled": true,
+  "shots": [
+    {
+      "file": "demolition__playing.png",
+      "game": "demolition",
+      "phase": "playing",
+      "bytes": 714664,
+      "sha256": "751b72374a7536e337b34ea39abdfb014acdc27acc18733e5864a3e45fd4814e"
+    },
+    {
+      "file": "limbo__playing.png",
+      "game": "limbo",
+      "phase": "playing",
+      "bytes": 921670,
+      "sha256": "b9d6d2119188881cd0f975556d3678b90a23ccb89aa70e93959325b373543374"
+    },
+    {
+      "file": "derby__playing.png",
+      "game": "derby",
+      "phase": "playing",
+      "bytes": 933882,
+      "sha256": "1c8462a5d524d41cd70129a23c1ca4967b28675b105adcd644b56f275a589396"
+    },
+    {
+      "file": "killer__playing.png",
+      "game": "killer",
+      "phase": "playing",
+      "bytes": 837094,
+      "sha256": "d826f802f0d3c8788d24f6f58cca5e65a56cd0dfb5c3bb19d871c42d956ed799"
+    },
+    {
+      "file": "quackshot__playing.png",
+      "game": "quackshot",
+      "phase": "playing",
+      "bytes": 679633,
+      "sha256": "0a825dad3139c60049be30520206b9a0b42964c2601be8c87bb6fd4221d449d6"
+    },
+    {
+      "file": "shanghai__playing.png",
+      "game": "shanghai",
+      "phase": "playing",
+      "bytes": 865050,
+      "sha256": "d8cb623bc7c074d2e4f9af415841128181508b6fb4669f179a4e65bc6cea41e3"
+    },
+    {
+      "file": "cricket__playing.png",
+      "game": "cricket",
+      "phase": "playing",
+      "bytes": 689786,
+      "sha256": "3a4740ba88517208161897a5515a30cdbe206591b40293d8cf5d58e8be552da8"
+    },
+    {
+      "file": "x01__playing.png",
+      "game": "x01",
+      "phase": "playing",
+      "bytes": 706318,
+      "sha256": "b8e1b6f6c3bb86e85d229af8956f17c3e75a809215ffaa251755ac575e9a03b4"
+    },
+    {
+      "file": "warmup__playing.png",
+      "game": "warmup",
+      "phase": "playing",
+      "bytes": 815177,
+      "sha256": "47fba0da2686d2346e3419c9fb0370803addcffb5ae10ab3e35ed4d85dff3550"
+    },
+    {
+      "file": "quick10__playing.png",
+      "game": "quick10",
+      "phase": "playing",
+      "bytes": 766117,
+      "sha256": "98e9b054990583a20e14e243f7e93c015f9d3a8216fdbd80322d675f6821ae94"
+    }
+  ],
+  "promotedAs": "2026-07-20-v16",
+  "note": "Playing-layout baselines for FlightDeck v16 (includes Quick 10 + X01)."
+}

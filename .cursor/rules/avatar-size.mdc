@@ -1,0 +1,13 @@
+---
+description: In-play avatar size must stay at the shared 90px default
+globs: public/games/**
+alwaysApply: false
+---
+
+# Avatar size (in-play)
+
+- Shared default: `--fc-avatar-inplay: 90px` in `public/games/shared-player-theme.css`.
+- **New games must use that default.** Do not set a smaller `--fc-avatar-inplay` on a game board.
+- Overlay / takeover avatars use `--fc-avatar-overlay: 140px` (also shared).
+- Six-player layouts (Demolition, Derby, Harper Wins, etc.) already fit 90px — do not shrink “to make room.”
+- If a board needs a rare exception, ask the user first; never silently override.

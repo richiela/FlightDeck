@@ -1,0 +1,32 @@
+---
+description: Checkpoint QA (paused) — class checklist kept for optional use
+alwaysApply: true
+---
+
+# Checkpoint QA
+
+## Status: paused (Jul 23, 2026)
+
+**Do not run** the mandatory pre-freeze QA pass (mock server, full-game exercise, playing-layout captures / class V diffs) unless the user explicitly asks for QA.
+
+Reason: screenshot hash diffs were noisy (capture noise → constant “changed” → promote anyway) and did **not** catch the UI regressions that matter (pixel shifts, avatar sizing, etc.). User playtesting is the gate for now.
+
+Checkpoints / deploys proceed per `checkpoints.mdc` and `deploy.mdc` **without** waiting on this file.
+
+## Optional (only if user asks)
+
+Port safety if you do start a mock QA server: prefer free port; prefer **4000 + mock** when 3000 is busy; never kill a process you did not start; if both busy, ask.
+
+Helper (kept, not required): `node qa/capture-playing-layouts.js` → `qa/visual-baselines/_pending/`. Baselines under `qa/visual-baselines/<date>/` remain historical reference only.
+
+### Class checklist (reference if QA is re-enabled)
+
+**A — Animations & transitions** — timed overlays hold full life; Video on ≥ clip; no early advance; dismiss → playing clean.
+
+**B — Cross-game consistency** — next-player / winner / Control actions feel consistent.
+
+**C — Core functionality** — roster/start/score/undo/sync; Video toggle.
+
+**V — Playing-layout visuals** — capture vs latest baseline; unexpected drift → fail (was required; currently paused).
+
+**D — Regression classes** — _None yet._

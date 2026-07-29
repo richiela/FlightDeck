@@ -1,0 +1,18 @@
+---
+description: Where FlightDeck version checkpoints live and how to create new ones
+alwaysApply: true
+---
+
+# Checkpoints / revisions
+
+- All version checkpoints live under **`/Users/richiela/Projects/revisions/`** (sibling of `FlightDeck`, not inside the app tree).
+- Existing examples: `FlightDeck.v01` … `FlightDeck.v14`.
+- When the user asks for a checkpoint / snapshot / version freeze:
+  1. **No mandatory QA gate** (see `checkpoint-qa.mdc` — paused). Only run QA if the user explicitly asks.
+  2. Copy the current `FlightDeck` tree into `revisions/` as `FlightDeck.vX.Y` (next version after the latest there).
+  3. Exclude `node_modules` and any local venvs (`.venv-ytdlp`, `.venv-img`) unless they explicitly want a full copy. Keep tooling outside the game tree when possible (`/Users/richiela/Projects/.venv-ytdlp`).
+  4. Bump the `#appVersion` badge in **both** `public/control.html` and `public/viewer.html` to match (e.g. `v0.16.1`). Keep the two strings identical.
+  5. In `CHANGELOG.md`: move **`## Unreleased`** bullets into the new version section, then reset Unreleased to point at this freeze (empty / “none yet”).
+  6. Do **not** create new checkpoint folders next to `FlightDeck` at the Projects root.
+- Active working copy remains **`/Users/richiela/Projects/FlightDeck`**. Do not move or rename it into `revisions/`.
+- Between freezes, keep Unreleased updated as work lands (see `changelog-detail.mdc`).

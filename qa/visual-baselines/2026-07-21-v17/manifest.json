@@ -1,0 +1,143 @@
+{
+  "capturedAt": "2026-07-21T08:33:04.758Z",
+  "port": 4000,
+  "resolution": "1920x1080",
+  "videoEnabled": true,
+  "outDir": "/Users/richiela/Projects/FlightDeck.dev/qa/visual-baselines/_pending",
+  "baselineCompared": "/Users/richiela/Projects/FlightDeck.dev/qa/visual-baselines/2026-07-20-v16",
+  "shots": [
+    {
+      "file": "demolition__playing.png",
+      "game": "demolition",
+      "phase": "playing",
+      "bytes": 715236,
+      "sha256": "e11648ca655b13f791551334eb93fe0041c735e922caa905af23458be352caf6"
+    },
+    {
+      "file": "limbo__playing.png",
+      "game": "limbo",
+      "phase": "playing",
+      "bytes": 918178,
+      "sha256": "c4fcf864bc34b41528469d613819777487a161b358a8f5ca5d80ca0c028962f3"
+    },
+    {
+      "file": "derby__playing.png",
+      "game": "derby",
+      "phase": "playing",
+      "bytes": 931946,
+      "sha256": "f9d913cc7846af0e4a7d05cea818f85d3191e1319710f90dd9abd3d2e14f38b6"
+    },
+    {
+      "file": "killer__playing.png",
+      "game": "killer",
+      "phase": "playing",
+      "bytes": 824238,
+      "sha256": "7d4b9b68beb89657f9d7d17fd24e70927725ae50221b45f0dadd4bfa9e2dfe43"
+    },
+    {
+      "file": "quackshot__playing.png",
+      "game": "quackshot",
+      "phase": "playing",
+      "bytes": 680301,
+      "sha256": "6a3f0cf79e4780a3a134ab73145ec79852d2a420ad1951ded6ccc334a4d0aa29"
+    },
+    {
+      "file": "shanghai__playing.png",
+      "game": "shanghai",
+      "phase": "playing",
+      "bytes": 866375,
+      "sha256": "4ca8e5f8b250008da2e577fdf089239f107101b15d5aa37043dc3ce90d35aeee"
+    },
+    {
+      "file": "cricket__playing.png",
+      "game": "cricket",
+      "phase": "playing",
+      "bytes": 690569,
+      "sha256": "a3de7efbc39714fa3fe190185d2d0e5c0cf5cb9ecfe0f446c353f85d3902bd17"
+    },
+    {
+      "file": "x01__playing.png",
+      "game": "x01",
+      "phase": "playing",
+      "bytes": 710465,
+      "sha256": "2dce1e2baea63fa7b655b0ce7d5c50e717af7919bcc561d4b78bd0ba09dc9efb"
+    },
+    {
+      "file": "warmup__playing.png",
+      "game": "warmup",
+      "phase": "playing",
+      "bytes": 816047,
+      "sha256": "e8018086dd6ea1bd853a523e45375f3244714071143dca243c45eed79e1a4d29"
+    },
+    {
+      "file": "quick10__playing.png",
+      "game": "quick10",
+      "phase": "playing",
+      "bytes": 766910,
+      "sha256": "00a57dc1abda7223fd260593b8f4cb9ced7298bdef66561dc02b4660dff16edd"
+    },
+    {
+      "file": "harperwins__playing.png",
+      "game": "harperwins",
+      "phase": "playing",
+      "bytes": 669984,
+      "sha256": "9e72ef86465e193bf4dcd0b6ca1c549d9ddb2c7e17fc93a6f57c4f1613ab0b56"
+    }
+  ],
+  "diff": [
+    {
+      "file": "demolition__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "limbo__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "derby__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "killer__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "quackshot__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "shanghai__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "cricket__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "x01__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "warmup__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "quick10__playing.png",
+      "status": "changed",
+      "baseline": "2026-07-20-v16"
+    },
+    {
+      "file": "harperwins__playing.png",
+      "status": "missing_in_baseline"
+    }
+  ]
+}

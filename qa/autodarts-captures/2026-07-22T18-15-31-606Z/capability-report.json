@@ -1,0 +1,54 @@
+{
+  "verdict": "PASS \u2014 local Board Manager provides FlightDeck must-haves",
+  "capture": "qa/autodarts-captures/2026-07-22T18-15-31-606Z",
+  "transport": {
+    "ws": "ws://HOST:3180/api/events (type=state carries throws)",
+    "http_state": "GET /api/state (status/event/numThrows; throws often omitted on poll)",
+    "commands": {
+      "start": "PUT /api/start",
+      "stop": "PUT /api/stop",
+      "reset": "POST /api/reset",
+      "calibrate_auto": "POST /api/config/calibration/auto"
+    }
+  },
+  "must_haves": {
+    "per_dart_hit": {
+      "pass": true,
+      "detail": "throws[].segment {name,number,bed,multiplier} + coords"
+    },
+    "miss": {
+      "pass": true,
+      "detail": "M* / bed=Outside / multiplier=0 (e.g. M3)"
+    },
+    "ready": {
+      "pass": true,
+      "detail": "status=Throw, running=true"
+    },
+    "takeout": {
+      "pass": true,
+      "detail": "Takeout / Takeout in progress / Takeout started / Takeout finished"
+    },
+    "reset": {
+      "pass": true,
+      "detail": "event=Manual reset (stuck takeout recovered)"
+    },
+    "calibrate": {
+      "pass": true,
+      "detail": "Calibration started/finished"
+    },
+    "start_stop": {
+      "pass": true,
+      "detail": "Stopping/Stopped/Starting/Started"
+    }
+  },
+  "not_seen_this_session": [
+    "bull/25",
+    "same-number S/D/T ladder"
+  ],
+  "driver_notes": [
+    "Emit scoring on WS state when numThrows increases; map segment.number + multiplier (0 => miss)",
+    "Arm takeout wait on status Takeout / Takeout in progress or event Takeout started",
+    "Clear wait on Takeout finished or Manual reset",
+    "Do not require Autodarts cloud match \u2014 board-only works"
+  ]
+}

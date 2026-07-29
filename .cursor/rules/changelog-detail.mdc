@@ -1,0 +1,23 @@
+---
+description: CHANGELOG detail and Unreleased pending list
+globs: CHANGELOG.md
+alwaysApply: true
+---
+
+# Changelog detail
+
+## Unreleased (required between freezes)
+
+- Keep a bottom-of-file **`## Unreleased — since FlightDeck.vX.Y`** section (latest revision freeze under `../revisions/`).
+- After any meaningful product/fix/behavior change in the working tree, **append a bullet there in the same turn** — do not wait for checkpoint or deploy.
+- That section is the user’s pending-changes side window; keep it accurate and scannable (scroll to end of `CHANGELOG.md`).
+- On **checkpoint / version freeze**: move Unreleased bullets into the new `## vX.Y` section, then reset Unreleased at the bottom to empty (or “none yet”) pointed at the new freeze.
+- Deploy-only badge bumps without a freeze stay noted under Unreleased (and a short dated deploy stub is OK); do not clear Unreleased on deploy alone.
+
+## Bullet quality (Unreleased or a version freeze)
+
+- Prefer **one concern per bullet** — do not cram multiple rule/UI/scoring changes into a single overloaded line.
+- Spell out **what changed and why it matters** enough that someone who wasn’t in the chat can understand it (e.g. “removed Easy/Hard”, “must match bed in order”, “Harper +1 when challenger scores 0”).
+- Group related bullets under the same game/feature prefix (`Harper Wins: …`) rather than one mega-bullet.
+- Keep bullets pointed, but **err on more detail** when in doubt — especially ruleset, scoring, and UX behavior changes discussed across sessions.
+- Avoid burying important product decisions inside parentheticals of an unrelated bullet.

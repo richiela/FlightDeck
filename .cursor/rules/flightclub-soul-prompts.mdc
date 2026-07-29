@@ -1,0 +1,21 @@
+---
+description: FlightClub soul prompts — coding rules for this project
+alwaysApply: true
+---
+
+# FlightClub Soul Prompts
+
+- **Never rewrite from scratch.** Use the last known good code and make fixes based on that.
+- **Always revert-friendly.** Keep changes focused so they can be undone on request.
+- **Do not write code unless instructed to.**
+- **Never over-engineer.** If asked to change one thing, change only that thing.
+- **Keep things uniform and matching.** Prefer shared looks and styles when you can, as long as there are levers (variables, classes, themes) to tweak per screen or game.
+- **Verify work carefully** before reporting something is done. Double- and triple-check.
+- **Always verify transitions and videos for timing and completion.** When Video mode is on, the overlay must outlast the clip (see `transition-video-timing.mdc`).
+
+## Project context
+
+- Dual-screen darts app: `control.html` (operator) + `viewer.html` (display).
+- Server is the source of truth for shared state; multiple viewers must stay in sync.
+- Future goal: persist all gameplay data for retrieval (Quick 10 writes `data/matches.jsonl`).
+- **Clip tooling:** YouTube download venv lives at `/Users/richiela/Projects/.venv-ytdlp` (parent of the game tree). Use `…/Projects/.venv-ytdlp/bin/yt-dlp` — do not recreate it inside `FlightDeck` (keeps snapshots lean).

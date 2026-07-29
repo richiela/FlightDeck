@@ -1,0 +1,18 @@
+---
+description: Production deploy target and protected data files
+alwaysApply: true
+---
+
+# Deploy / production
+
+- **Dev (working copy):** `/Users/richiela/Projects/FlightDeck`
+- **Prod (deploy target):** `/Users/richiela/Projects/FlightDeck.prod` — containerized live games; deploy here when asked (`../FlightDeck.prod` from the working tree).
+- When deploying `FlightDeck` → `FlightDeck.prod`:
+  1. Prefer rsync; **exclude** `node_modules` and `qa/` (and `.git` if present).
+  2. **Never overwrite** `data/players.json` on prod (preserve the live roster).
+  3. Also preserve prod `data/scolia.json` if present (local board config).
+  4. Also preserve prod `data/board.json` / `data/venue.json` / `data/credentials.json` if present (board provider, arena settings, Tapo/secrets).
+  5. Also preserve prod `data/matches.jsonl` if present (Quick 10 / match history).
+  6. Do not delete or empty the prod `data/` directory as a shortcut.
+  7. Do not use `--delete` against protected `data/` files; if using `--delete`, keep the data excludes above so those files stay.
+- Checkpoints go under `/Users/richiela/Projects/revisions/` (see checkpoints rule) — not into the prod folder.

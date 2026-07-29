@@ -1,0 +1,3454 @@
+{
+  "host": "10.0.0.90:3180",
+  "outDir": "/Users/richiela/Projects/FlightDeck.dev/qa/autodarts-captures/2026-07-22T18-15-31-606Z",
+  "startedAt": "2026-07-22T18:15:31.607Z",
+  "endedAt": "2026-07-22T18:22:59.071Z",
+  "durationSec": 447,
+  "eventCount": 3445,
+  "typeCounts": {
+    "motion_state": 1577,
+    "cam_stats": 1020,
+    "state_poll": 446,
+    "stats": 339,
+    "state": 58,
+    "cam_state": 2,
+    "state_snapshot": 1,
+    "start": 1,
+    "ws_close": 1
+  },
+  "stateTransitions": [
+    {
+      "at": 1784744131632,
+      "source": "boot",
+      "connected": true,
+      "running": false,
+      "status": "Stopped",
+      "event": "Stopped",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744132049,
+      "source": "after_start",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Started",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744243174,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744246871,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744247936,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744260901,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744264444,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744268206,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744273795,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744275806,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744279630,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744282432,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744284840,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744287444,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744289006,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744298820,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744301553,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744304163,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744308595,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744310097,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744316821,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744319672,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744322163,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744324165,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744325635,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744332091,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744335737,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744338846,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744342072,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744343124,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744346999,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744349887,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744351926,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744353024,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744354193,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744357973,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744359754,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744362364,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744362670,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744364786,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744376792,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744380885,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Manual reset",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744391694,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744409917,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Manual reset",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744416255,
+      "source": "ws",
+      "connected": true,
+      "running": false,
+      "status": "Calibrating",
+      "event": "Calibration started",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744417428,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Calibration finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744420831,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Stopping",
+      "event": "Stopping",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744420832,
+      "source": "ws",
+      "connected": true,
+      "running": false,
+      "status": "Stopped",
+      "event": "Stopped",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744426667,
+      "source": "ws",
+      "connected": true,
+      "running": false,
+      "status": "Starting",
+      "event": "Starting",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744430438,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Started",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744436664,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744439910,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744445935,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744453865,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 1
+    },
+    {
+      "at": 1784744456375,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Throw detected",
+      "numThrows": 2
+    },
+    {
+      "at": 1784744459169,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout",
+      "event": "Throw detected",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744460995,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Takeout in progress",
+      "event": "Takeout started",
+      "numThrows": 3
+    },
+    {
+      "at": 1784744462829,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Takeout finished",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744478926,
+      "source": "ws",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Manual reset",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744481394,
+      "source": "poll",
+      "connected": false,
+      "running": false,
+      "status": "Starting",
+      "event": "Starting",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744482384,
+      "source": "poll",
+      "connected": true,
+      "running": false,
+      "status": "Starting",
+      "event": "Starting",
+      "numThrows": 0
+    },
+    {
+      "at": 1784744486390,
+      "source": "poll",
+      "connected": true,
+      "running": true,
+      "status": "Throw",
+      "event": "Started",
+      "numThrows": 0
+    }
+  ],
+  "throwLikeSample": [
+    {
+      "at": 1784744132106,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 1,
+        "timings": {
+          "copy": 208,
+          "diff": 441125,
+          "count": 76500,
+          "takeout": 83,
+          "state": 9000,
+          "ret": 29208,
+          "total": 388958
+        },
+        "isWaiting": true,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 2
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744132146,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 1,
+        "timings": {
+          "copy": 84,
+          "diff": 256708,
+          "count": 81459,
+          "takeout": 125,
+          "state": 7750,
+          "ret": 23917,
+          "total": 562458
+        },
+        "isWaiting": true,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 1
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744132174,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 1,
+        "timings": {
+          "copy": 208,
+          "diff": 902792,
+          "count": 228250,
+          "takeout": 83,
+          "state": 25833,
+          "ret": 126917,
+          "total": 375125
+        },
+        "isWaiting": false,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744242984,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 1199,
+            "boardPixels": 223,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 250,
+          "diff": 372875,
+          "count": 93792,
+          "takeout": 125,
+          "state": 14209,
+          "ret": 1000,
+          "total": 1017833
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 1,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243016,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 417,
+            "boardPixels": 90,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 640,
+            "boardPixels": 300,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 396,
+            "boardPixels": 73,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 250,
+          "diff": 467584,
+          "count": 82500,
+          "takeout": 42,
+          "state": 15625,
+          "ret": 917,
+          "total": 491292
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 2,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243045,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 399,
+            "boardPixels": 85,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 619,
+            "boardPixels": 284,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 385,
+            "boardPixels": 67,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 42,
+          "diff": 297917,
+          "count": 74666,
+          "takeout": 84,
+          "state": 12959,
+          "ret": 1000,
+          "total": 574291
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 3,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243103,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 403,
+            "boardPixels": 88,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 612,
+            "boardPixels": 279,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 384,
+            "boardPixels": 69,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 208,
+          "diff": 356625,
+          "count": 71875,
+          "takeout": 417,
+          "state": 15792,
+          "ret": 1166,
+          "total": 391458
+        },
+        "isWaiting": false,
+        "isStable": true,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 1,
+          "dart": 4,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243135,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 393,
+            "boardPixels": 85,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 618,
+            "boardPixels": 287,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 385,
+            "boardPixels": 66,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 250,
+          "diff": 635583,
+          "count": 67417,
+          "takeout": 375,
+          "state": 16792,
+          "ret": 1042,
+          "total": 452458
+        },
+        "isWaiting": false,
+        "isStable": true,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 2,
+          "dart": 5,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243172,
+      "kind": "ws",
+      "type": "state",
+      "data": {
+        "connected": true,
+        "running": true,
+        "status": "Throw",
+        "event": "Throw detected",
+        "numThrows": 1,
+        "throws": [
+          {
+            "segment": {
+              "name": "S1",
+              "number": 1,
+              "bed": "SingleInner",
+              "multiplier": 1
+            },
+            "coords": {
+              "x": 0.13198958628372967,
+              "y": 0.4232016827079088
+            }
+          }
+        ]
+      }
+    },
+    {
+      "at": 1784744243174,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 0,
+        "camStates": [
+          {
+            "backgroundPixels": 396,
+            "boardPixels": 86,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 614,
+            "boardPixels": 281,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 380,
+            "boardPixels": 67,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          }
+        ],
+        "class": 2,
+        "timings": {
+          "copy": 125,
+          "diff": 352875,
+          "count": 104250,
+          "takeout": 125,
+          "state": 9375,
+          "ret": 847125,
+          "total": 841875
+        },
+        "isWaiting": false,
+        "isStable": true,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 6,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243198,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 41,
+          "diff": 218458,
+          "count": 39250,
+          "takeout": 42,
+          "state": 5209,
+          "ret": 14292,
+          "total": 1319667
+        },
+        "isWaiting": true,
+        "isStable": false,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 6
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243223,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 42,
+          "diff": 174167,
+          "count": 39625,
+          "takeout": 0,
+          "state": 4708,
+          "ret": 13042,
+          "total": 280167
+        },
+        "isWaiting": true,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 1,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 5
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243343,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 167,
+          "diff": 425834,
+          "count": 136542,
+          "takeout": 83,
+          "state": 7542,
+          "ret": 24292,
+          "total": 234500
+        },
+        "isWaiting": true,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 2,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 4
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243401,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 1,
+        "timings": {
+          "copy": 83,
+          "diff": 489667,
+          "count": 137500,
+          "takeout": 125,
+          "state": 8833,
+          "ret": 27125,
+          "total": 599000
+        },
+        "isWaiting": true,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 3
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243432,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 1,
+        "timings": {
+          "copy": 167,
+          "diff": 424333,
+          "count": 89083,
+          "takeout": 83,
+          "state": 9875,
+          "ret": 41542,
+          "total": 668208
+        },
+        "isWaiting": true,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 2
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243466,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 1,
+        "timings": {
+          "copy": 84,
+          "diff": 268750,
+          "count": 62417,
+          "takeout": 84,
+          "state": 8625,
+          "ret": 24083,
+          "total": 575083
+        },
+        "isWaiting": true,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 1
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744243494,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 1,
+        "timings": {
+          "copy": 84,
+          "diff": 257166,
+          "count": 73458,
+          "takeout": 125,
+          "state": 12250,
+          "ret": 24167,
+          "total": 368500
+        },
+        "isWaiting": false,
+        "isStable": true,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 3,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246645,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 159,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 0,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": true,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 42,
+          "diff": 277042,
+          "count": 88000,
+          "takeout": 125,
+          "state": 10583,
+          "ret": 875,
+          "total": 961167
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246705,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 508,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 627,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 254,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 167,
+          "diff": 362417,
+          "count": 83042,
+          "takeout": 167,
+          "state": 215667,
+          "ret": 750,
+          "total": 382042
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246734,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 1327,
+            "boardPixels": 11,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 1714,
+            "boardPixels": 88,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 738,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 250,
+          "diff": 434417,
+          "count": 135209,
+          "takeout": 125,
+          "state": 26917,
+          "ret": 709,
+          "total": 668459
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 1,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246765,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 2211,
+            "boardPixels": 353,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2024,
+            "boardPixels": 336,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 1293,
+            "boardPixels": 0,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 250,
+          "diff": 384667,
+          "count": 65000,
+          "takeout": 83,
+          "state": 15083,
+          "ret": 958,
+          "total": 605250
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": true,
+        "isHand": false,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 2,
+          "hand": 0,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246795,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 2904,
+            "boardPixels": 713,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2407,
+            "boardPixels": 578,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 1839,
+            "boardPixels": 100,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 83,
+          "diff": 362916,
+          "count": 94375,
+          "takeout": 125,
+          "state": 10875,
+          "ret": 834,
+          "total": 480750
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 1,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246824,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 3429,
+            "boardPixels": 1111,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2639,
+            "boardPixels": 785,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2288,
+            "boardPixels": 260,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": false,
+            "isDart": true,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 166,
+          "diff": 764708,
+          "count": 139167,
+          "takeout": 42,
+          "state": 13542,
+          "ret": 958,
+          "total": 474250
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 2,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": false,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246869,
+      "kind": "ws",
+      "type": "state",
+      "data": {
+        "connected": true,
+        "running": true,
+        "status": "Takeout in progress",
+        "event": "Takeout started",
+        "numThrows": 1,
+        "throws": [
+          {
+            "segment": {
+              "name": "S1",
+              "number": 1,
+              "bed": "SingleInner",
+              "multiplier": 1
+            },
+            "coords": {
+              "x": 0.13198958628372967,
+              "y": 0.4232016827079088
+            }
+          }
+        ]
+      }
+    },
+    {
+      "at": 1784744246871,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 4199,
+            "boardPixels": 1736,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2721,
+            "boardPixels": 965,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2688,
+            "boardPixels": 447,
+            "dartBackgroundPixels": 0,
+            "dartPixels": 0,
+            "takeoutBackgroundPixels": 0,
+            "takeoutPixels": 0,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 3,
+        "timings": {
+          "copy": 83,
+          "diff": 370791,
+          "count": 161416,
+          "takeout": 41,
+          "state": 8334,
+          "ret": 958,
+          "total": 924833
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 3,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": true,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246943,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 4555,
+            "boardPixels": 1920,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 407,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2808,
+            "boardPixels": 1134,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 607,
+            "takeoutPixels": 274,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3029,
+            "boardPixels": 600,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 379,
+            "takeoutPixels": 66,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 83,
+          "diff": 332667,
+          "count": 73417,
+          "takeout": 581834,
+          "state": 9666,
+          "ret": 750,
+          "total": 546750
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 4,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744246975,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 5352,
+            "boardPixels": 2216,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 406,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2871,
+            "boardPixels": 1257,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 614,
+            "takeoutPixels": 281,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3840,
+            "boardPixels": 1036,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 379,
+            "takeoutPixels": 66,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 125,
+          "diff": 443458,
+          "count": 109959,
+          "takeout": 696167,
+          "state": 14458,
+          "ret": 833,
+          "total": 1004166
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 5,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247033,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 5800,
+            "boardPixels": 2392,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 407,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 2990,
+            "boardPixels": 1409,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 614,
+            "takeoutPixels": 281,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4083,
+            "boardPixels": 1218,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 379,
+            "takeoutPixels": 66,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 166,
+          "diff": 624917,
+          "count": 186875,
+          "takeout": 769958,
+          "state": 9917,
+          "ret": 708,
+          "total": 1294625
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 6,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247063,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 6212,
+            "boardPixels": 2563,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 406,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3085,
+            "boardPixels": 1532,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 612,
+            "takeoutPixels": 279,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4412,
+            "boardPixels": 1504,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 377,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 42,
+          "diff": 409167,
+          "count": 95834,
+          "takeout": 506333,
+          "state": 11667,
+          "ret": 625,
+          "total": 1598292
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 7,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247125,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 6586,
+            "boardPixels": 2754,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 405,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3425,
+            "boardPixels": 1959,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 613,
+            "takeoutPixels": 280,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4659,
+            "boardPixels": 1743,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 379,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 167,
+          "diff": 397916,
+          "count": 80625,
+          "takeout": 514750,
+          "state": 7042,
+          "ret": 708,
+          "total": 1029208
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 8,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247155,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 7228,
+            "boardPixels": 3195,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 406,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3568,
+            "boardPixels": 2101,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 612,
+            "takeoutPixels": 279,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 5030,
+            "boardPixels": 2148,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 379,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 84,
+          "diff": 502625,
+          "count": 86292,
+          "takeout": 608459,
+          "state": 8833,
+          "ret": 1042,
+          "total": 1007000
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 9,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247214,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 7418,
+            "boardPixels": 3409,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 408,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3718,
+            "boardPixels": 2271,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 614,
+            "takeoutPixels": 281,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 5005,
+            "boardPixels": 2226,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 380,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 125,
+          "diff": 388750,
+          "count": 87208,
+          "takeout": 526958,
+          "state": 6792,
+          "ret": 875,
+          "total": 1215792
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 10,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247245,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 7598,
+            "boardPixels": 3667,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 407,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3796,
+            "boardPixels": 2351,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 613,
+            "takeoutPixels": 281,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4873,
+            "boardPixels": 2189,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 378,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 250,
+          "diff": 677542,
+          "count": 134208,
+          "takeout": 621500,
+          "state": 7041,
+          "ret": 542,
+          "total": 1015500
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 11,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247336,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 7533,
+            "boardPixels": 3685,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 406,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3969,
+            "boardPixels": 2537,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 612,
+            "takeoutPixels": 279,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4847,
+            "boardPixels": 2204,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 380,
+            "takeoutPixels": 67,
+            "isStable": true,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 209,
+          "diff": 560459,
+          "count": 109667,
+          "takeout": 984666,
+          "state": 30167,
+          "ret": 1083,
+          "total": 1447500
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 12,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247364,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 7274,
+            "boardPixels": 3681,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 407,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3988,
+            "boardPixels": 2566,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 612,
+            "takeoutPixels": 279,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4666,
+            "boardPixels": 2148,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 380,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 84,
+          "diff": 384291,
+          "count": 85625,
+          "takeout": 487750,
+          "state": 9542,
+          "ret": 500,
+          "total": 1695458
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 13,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247394,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 7060,
+            "boardPixels": 3622,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 405,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3958,
+            "boardPixels": 2530,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 613,
+            "takeoutPixels": 280,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4600,
+            "boardPixels": 2130,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 380,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 125,
+          "diff": 389666,
+          "count": 83542,
+          "takeout": 477125,
+          "state": 9834,
+          "ret": 583,
+          "total": 972125
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 14,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247425,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 6839,
+            "boardPixels": 3517,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 406,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3945,
+            "boardPixels": 2514,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 613,
+            "takeoutPixels": 280,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4465,
+            "boardPixels": 2044,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 380,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 84,
+          "diff": 491459,
+          "count": 129625,
+          "takeout": 642083,
+          "state": 13541,
+          "ret": 625,
+          "total": 966125
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 15,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247456,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 6577,
+            "boardPixels": 3417,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 405,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3912,
+            "boardPixels": 2481,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 612,
+            "takeoutPixels": 279,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4426,
+            "boardPixels": 2025,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 380,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 125,
+          "diff": 610959,
+          "count": 133458,
+          "takeout": 647167,
+          "state": 11500,
+          "ret": 792,
+          "total": 1283250
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 16,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247513,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 6183,
+            "boardPixels": 3238,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 406,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3886,
+            "boardPixels": 2444,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 612,
+            "takeoutPixels": 279,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4383,
+            "boardPixels": 2013,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 379,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 125,
+          "diff": 521167,
+          "count": 81167,
+          "takeout": 504750,
+          "state": 8792,
+          "ret": 583,
+          "total": 1410250
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 17,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    },
+    {
+      "at": 1784744247545,
+      "kind": "ws",
+      "type": "motion_state",
+      "data": {
+        "darts": 1,
+        "camStates": [
+          {
+            "backgroundPixels": 6049,
+            "boardPixels": 3188,
+            "dartBackgroundPixels": 412,
+            "dartPixels": 86,
+            "takeoutBackgroundPixels": 407,
+            "takeoutPixels": 86,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 3884,
+            "boardPixels": 2439,
+            "dartBackgroundPixels": 614,
+            "dartPixels": 281,
+            "takeoutBackgroundPixels": 613,
+            "takeoutPixels": 280,
+            "isStable": true,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          },
+          {
+            "backgroundPixels": 4226,
+            "boardPixels": 1906,
+            "dartBackgroundPixels": 380,
+            "dartPixels": 67,
+            "takeoutBackgroundPixels": 378,
+            "takeoutPixels": 67,
+            "isStable": false,
+            "isHand": true,
+            "isDart": false,
+            "isTakeout": false
+          }
+        ],
+        "class": 0,
+        "timings": {
+          "copy": 84,
+          "diff": 391584,
+          "count": 77000,
+          "takeout": 509625,
+          "state": 8167,
+          "ret": 625,
+          "total": 1122208
+        },
+        "isWaiting": false,
+        "isStable": false,
+        "isDart": false,
+        "isHand": true,
+        "isTakeoutPartial": false,
+        "isTakeoutFull": false,
+        "frameCounts": {
+          "stable": 0,
+          "dart": 0,
+          "hand": 18,
+          "takeout": 0,
+          "wait": 0
+        },
+        "frameFlags": {
+          "dart": false,
+          "hand": true,
+          "takeout": false
+        }
+      }
+    }
+  ],
+  "checklistGuess": {
+    "perDartHit": false,
+    "missOrOutside": true,
+    "takeout": true,
+    "readyOrThrowStatus": true,
+    "resetSeen": true,
+    "calibrateSeen": true
+  },
+  "note": "checklistGuess is heuristic from event names/payloads — review events.jsonl for truth"
+}

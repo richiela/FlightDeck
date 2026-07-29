@@ -1,0 +1,314 @@
+{
+  "capturedAt": "2026-07-20T14:17:17.199Z",
+  "source": "https://localhost:4000/viewer.html",
+  "videoEnabled": true,
+  "resolution": "1920x1080",
+  "shots": [
+    {
+      "file": "demolition__playing.png",
+      "game": "demolition",
+      "phase": "playing",
+      "bytes": 725677
+    },
+    {
+      "file": "demolition__bust.png",
+      "game": "demolition",
+      "phase": "bust",
+      "bytes": 537097
+    },
+    {
+      "file": "demolition__next.png",
+      "game": "demolition",
+      "phase": "intermission",
+      "bytes": 310948
+    },
+    {
+      "file": "demolition__checkout.png",
+      "game": "demolition",
+      "phase": "checkout",
+      "bytes": 318513
+    },
+    {
+      "file": "demolition__playoff.png",
+      "game": "demolition",
+      "phase": "playoff",
+      "bytes": 323659
+    },
+    {
+      "file": "demolition__winner.png",
+      "game": "demolition",
+      "phase": "winner",
+      "bytes": 678371
+    },
+    {
+      "file": "limbo__playing.png",
+      "game": "limbo",
+      "phase": "playing",
+      "bytes": 936639
+    },
+    {
+      "file": "limbo__life_loss.png",
+      "game": "limbo",
+      "phase": "life_loss",
+      "bytes": 375505
+    },
+    {
+      "file": "limbo__life_out.png",
+      "game": "limbo",
+      "phase": "life_loss",
+      "bytes": 379479
+    },
+    {
+      "file": "limbo__bar_clear.png",
+      "game": "limbo",
+      "phase": "bar_status",
+      "bytes": 381809
+    },
+    {
+      "file": "limbo__bar_hold.png",
+      "game": "limbo",
+      "phase": "bar_status",
+      "bytes": 370124
+    },
+    {
+      "file": "limbo__winner.png",
+      "game": "limbo",
+      "phase": "winner",
+      "bytes": 622697
+    },
+    {
+      "file": "derby__playing.png",
+      "game": "derby",
+      "phase": "playing",
+      "bytes": 951076
+    },
+    {
+      "file": "derby__next.png",
+      "game": "derby",
+      "phase": "intermission",
+      "bytes": 335231
+    },
+    {
+      "file": "derby__boost_double.png",
+      "game": "derby",
+      "phase": "mult_boost",
+      "bytes": 308219
+    },
+    {
+      "file": "derby__boost_triple.png",
+      "game": "derby",
+      "phase": "mult_boost",
+      "bytes": 303383
+    },
+    {
+      "file": "derby__knock_single.png",
+      "game": "derby",
+      "phase": "mult_knock",
+      "bytes": 247043
+    },
+    {
+      "file": "derby__knock_double.png",
+      "game": "derby",
+      "phase": "mult_knock",
+      "bytes": 277147
+    },
+    {
+      "file": "derby__knock_triple.png",
+      "game": "derby",
+      "phase": "mult_knock",
+      "bytes": 274586
+    },
+    {
+      "file": "derby__past_post.png",
+      "game": "derby",
+      "phase": "past_post",
+      "bytes": 315675
+    },
+    {
+      "file": "derby__winner.png",
+      "game": "derby",
+      "phase": "winner",
+      "bytes": 622687
+    },
+    {
+      "file": "derby__draw.png",
+      "game": "derby",
+      "phase": "draw",
+      "bytes": 564207
+    },
+    {
+      "file": "killer__playing.png",
+      "game": "killer",
+      "phase": "playing",
+      "bytes": 823689
+    },
+    {
+      "file": "killer__next.png",
+      "game": "killer",
+      "phase": "intermission",
+      "bytes": 452001
+    },
+    {
+      "file": "killer__became_killer.png",
+      "game": "killer",
+      "phase": "became_killer",
+      "bytes": 632136
+    },
+    {
+      "file": "killer__lost_killer.png",
+      "game": "killer",
+      "phase": "lost_killer",
+      "bytes": 584741
+    },
+    {
+      "file": "killer__k_boost_double.png",
+      "game": "killer",
+      "phase": "mult_boost",
+      "bytes": 502629
+    },
+    {
+      "file": "killer__k_boost_triple.png",
+      "game": "killer",
+      "phase": "mult_boost",
+      "bytes": 500146
+    },
+    {
+      "file": "killer__k_knock_double.png",
+      "game": "killer",
+      "phase": "mult_knock",
+      "bytes": 598010
+    },
+    {
+      "file": "killer__k_knock_triple.png",
+      "game": "killer",
+      "phase": "mult_knock",
+      "bytes": 594776
+    },
+    {
+      "file": "killer__death.png",
+      "game": "killer",
+      "phase": "death",
+      "bytes": 869834
+    },
+    {
+      "file": "killer__winner.png",
+      "game": "killer",
+      "phase": "winner",
+      "bytes": 718670
+    },
+    {
+      "file": "quackshot__playing.png",
+      "game": "quackshot",
+      "phase": "playing",
+      "bytes": 695371
+    },
+    {
+      "file": "quackshot__next.png",
+      "game": "quackshot",
+      "phase": "intermission",
+      "bytes": 534317
+    },
+    {
+      "file": "quackshot__outer_bull.png",
+      "game": "quackshot",
+      "phase": "bullseye",
+      "bytes": 537537
+    },
+    {
+      "file": "quackshot__double_bull.png",
+      "game": "quackshot",
+      "phase": "bullseye",
+      "bytes": 542693
+    },
+    {
+      "file": "quackshot__zone_minus.png",
+      "game": "quackshot",
+      "phase": "zone_hit",
+      "bytes": 833918
+    },
+    {
+      "file": "quackshot__splash.png",
+      "game": "quackshot",
+      "phase": "splash",
+      "bytes": 692425
+    },
+    {
+      "file": "quackshot__winner.png",
+      "game": "quackshot",
+      "phase": "winner",
+      "bytes": 771619
+    },
+    {
+      "file": "quackshot__draw.png",
+      "game": "quackshot",
+      "phase": "draw",
+      "bytes": 915973
+    },
+    {
+      "file": "shanghai__playing.png",
+      "game": "shanghai",
+      "phase": "playing",
+      "bytes": 871489
+    },
+    {
+      "file": "shanghai__next.png",
+      "game": "shanghai",
+      "phase": "intermission",
+      "bytes": 762058
+    },
+    {
+      "file": "shanghai__winner.png",
+      "game": "shanghai",
+      "phase": "winner",
+      "bytes": 992474
+    },
+    {
+      "file": "shanghai__draw.png",
+      "game": "shanghai",
+      "phase": "draw",
+      "bytes": 579992
+    },
+    {
+      "file": "cricket__playing.png",
+      "game": "cricket",
+      "phase": "playing",
+      "bytes": 677602
+    },
+    {
+      "file": "cricket__next.png",
+      "game": "cricket",
+      "phase": "intermission",
+      "bytes": 468890
+    },
+    {
+      "file": "cricket__cricket_closed.png",
+      "game": "cricket",
+      "phase": "cricket_closed",
+      "bytes": 491916
+    },
+    {
+      "file": "cricket__cricket_score.png",
+      "game": "cricket",
+      "phase": "cricket_score",
+      "bytes": 491514
+    },
+    {
+      "file": "cricket__cricket_dead.png",
+      "game": "cricket",
+      "phase": "cricket_dead",
+      "bytes": 469138
+    },
+    {
+      "file": "cricket__winner.png",
+      "game": "cricket",
+      "phase": "winner",
+      "bytes": 500716
+    },
+    {
+      "file": "warmup__playing.png",
+      "game": "warmup",
+      "phase": "playing",
+      "bytes": 815177
+    }
+  ]
+}

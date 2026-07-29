@@ -1,0 +1,23 @@
+---
+description: Event transition overlays must outlast their videos
+alwaysApply: true
+---
+
+# Transition / video timing
+
+When Viewer Video mode is on, **the overlay must stay up until the clip finishes** (plus a small buffer). Never let a timed phase advance while the event video is still playing.
+
+## Always verify
+
+When adding or changing a transition video, or editing overlay delays:
+
+1. Measure the clip duration (`ffprobe` or equivalent).
+2. Confirm the server hold covers that duration when Video is on (`delayMsWithVideo`, `DEMOLITION_BUST_VIDEO_OVERLAY_MS`, etc.).
+3. Account for any client delay before the video starts (e.g. Killer wedge anim) — on-screen time ≈ total schedule − pre-show wait.
+4. Winner screens that stay until dismissed are fine; timed event overlays are the risk.
+
+## Patterns in this repo
+
+- Killer became / lost / death: `delayMsWithVideo: killerWedgeAnimWaitMs(gameData) + KILLER_VIDEO_*_MS` in `gameEngines.js`; applied in `server.js` when `viewerVideoEnabled`.
+- Demolition bust: `DEMOLITION_BUST_VIDEO_OVERLAY_MS` in `server.js` is the **safety max**; with Video on, Viewer advances on bust clip `ended` (`BUST_VIDEO_COMPLETE`) so shorter clips don’t sit dead until the max.
+- Shared winner `playIn` clips: winner phase usually has no auto-dismiss — still check if a timed advance is added later.

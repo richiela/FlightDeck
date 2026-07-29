@@ -162,10 +162,20 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 
 ---
 
-## Unreleased — since FlightDeck.v0.18.3
+## v0.18.4 — FlightDeck.v0.18.4 (Jul 29, 2026)
 
+- Viewer/Control keep-awake: run Screen Wake Lock **and** silent looping video together (don’t drop video when Wake Lock “succeeds”); watchdog + pause/release retries
+- Viewer keep-awake: full-screen “Tap to keep display on” gate on **iPad/iPhone only** (Control scoring does not count); enable Wake Lock + video in the same tap; re-show gate if the OS releases the lock
+- Viewer keep-awake: only count Wake Lock from a Viewer tap as “held” on iOS (background request was hiding the gate while the screen still dimmed)
+- Keep-awake: remove port-4000 no-op so mock/dev can test the tap gate and Wake Lock
+- Keep-awake: headless/desktop Viewer auto Wake Lock + video with **no** tap overlay
 - Limbo background: new beach sunset photo (`public/assets/limbo/bg.jpg`, right edge trimmed to drop watermark while keeping last guy clipped at the edge); previous kept as `bg-prev.jpg` for revert
 - Repo layout: move `scoliaClient.js` → `board/scolia/scoliaClient.js` (alongside Autodarts)
 - Cleanup: remove stray `players.json.backup`, leftover `public/clips/winner-*.mp4`, `.DS_Store`; drop all `*.example` config stubs (defaults live in code / `pull.sh` seeds `tvm-recorder.json`)
 - Demolition/X01 bust (Video on): advance when bust clip ends (`BUST_VIDEO_COMPLETE`) instead of always holding 8.5s — removes dead pause after shorter clips; 8.5s remains safety max
 - TVMRecorder: `transpose: 0` (or false/none) means **no rotation** — was broken by `|| 1` which forced rotate-90 and made Brio clips portrait (720×1280)
+
+## Unreleased — since FlightDeck.v0.18.4
+
+- (none yet)
+

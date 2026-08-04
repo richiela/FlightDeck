@@ -367,45 +367,6 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
-        .viewer-wake-hint {
-            position: fixed;
-            inset: 0;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            transform: none;
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 14px;
-            padding: 28px;
-            border: none;
-            border-radius: 0;
-            background: rgba(6, 8, 12, 0.78);
-            color: #f0e6d2;
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 1.55rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-            text-align: center;
-            box-shadow: none;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .viewer-wake-hint.is-visible { display: flex; }
-        .viewer-wake-hint .wake-hint-sub {
-            font-size: 0.95rem;
-            font-weight: 500;
-            opacity: 0.8;
-            max-width: 22em;
-            line-height: 1.35;
-        }
     </style>
 </head>
 <body>
@@ -419,11 +380,6 @@
         <div class="header-title" id="headerTitle">Richie's Flight Deck</div>
         <span class="app-version" id="appVersion">v0.18.4</span>
     </header>
-
-    <button type="button" class="viewer-wake-hint" id="viewerWakeHint" aria-live="polite">
-        <span>Tap to keep display on</span>
-        <span class="wake-hint-sub">Required once on this iPad — scoring on Control does not count</span>
-    </button>
 
     <div id="viewerSharedBg" class="viewer-shared-bg" aria-hidden="true">
         <div id="viewerBg1" class="dynamic-bg-viewport"></div>
@@ -450,7 +406,7 @@
         <video id="viewerEventVideo" class="fd-event-video" playsinline preload="auto"></video>
     </div>
 
-    <script src="/keep-awake.js?v=6"></script>
+    <script src="/keep-awake.js?v=7"></script>
     <script>
         const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
         let socket = null;
@@ -479,13 +435,6 @@
         function syncWakeLockFromState(state) {
             const want = computeWakeLockDesired(state);
             if (window.FlightDeckWakeLock) window.FlightDeckWakeLock.setDesired(want);
-            // Force hint from live API (don’t rely only on the custom event).
-            if (window.FlightDeckWakeLock) {
-                syncWakeHint({
-                    desired: !!window.FlightDeckWakeLock.isDesired(),
-                    held: !!window.FlightDeckWakeLock.isHeld()
-                });
-            }
             if (wakeLockExpiryTimer) {
                 clearTimeout(wakeLockExpiryTimer);
                 wakeLockExpiryTimer = null;
@@ -497,43 +446,7 @@
             wakeLockExpiryTimer = setTimeout(() => {
                 wakeLockExpiryTimer = null;
                 if (window.FlightDeckWakeLock) window.FlightDeckWakeLock.setDesired(false);
-                syncWakeHint({ desired: false, held: false });
             }, remain);
-        }
-
-        function syncWakeHint(detail) {
-            const hint = document.getElementById('viewerWakeHint');
-            if (!hint) return;
-            // iPad only — headless Viewer never shows this gate.
-            const requiresGesture = !!(detail && detail.requiresGesture)
-                || !!(window.FlightDeckWakeLock && window.FlightDeckWakeLock.requiresGesture);
-            const show = !!(requiresGesture && detail && detail.desired && !detail.held);
-            hint.classList.toggle('is-visible', show);
-        }
-
-        window.addEventListener('flightdeck-wakelock', (event) => {
-            syncWakeHint(event.detail || {});
-        });
-        const wakeHintBtn = document.getElementById('viewerWakeHint');
-        if (wakeHintBtn) {
-            const armFromGesture = (event) => {
-                if (event) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                if (!window.FlightDeckWakeLock) return;
-                // Must run inside the user-gesture stack (iPad Wake Lock requirement).
-                Promise.resolve(window.FlightDeckWakeLock.enableFromUserGesture())
-                    .then(() => {
-                        if (window.FlightDeckWakeLock.isHeld && window.FlightDeckWakeLock.isHeld()) {
-                            wakeHintBtn.classList.remove('is-visible');
-                        }
-                    })
-                    .catch(() => {});
-            };
-            wakeHintBtn.addEventListener('pointerup', armFromGesture);
-            wakeHintBtn.addEventListener('click', armFromGesture);
-            wakeHintBtn.addEventListener('touchend', armFromGesture, { passive: false });
         }
 
         function hideViewerEventOverlay() {

@@ -2,13 +2,12 @@
  * Screen keep-awake for Control / Viewer kiosk tabs.
  * Call FlightDeckWakeLock.setDesired(true|false) from page logic.
  *
- * iPad / iPhone: lasting Wake Lock needs a tap on THIS tab — show the Viewer
- * gate and call enableFromUserGesture() from that tap.
- *
- * Headless / desktop Viewer: auto-request Wake Lock + silent video (no gate).
+ * Auto path for all devices (Mac Mini Viewer is the main case):
+ *   Screen Wake Lock API when available + muted looping video backup.
+ * No tap overlay — iPad may still sleep without a gesture; that is an edge case.
  *
  * Dispatches "flightdeck-wakelock":
- * { desired, held, mode, needsGesture, requiresGesture, supported, wakeLock, video }.
+ * { desired, held, mode, needsGesture, supported, wakeLock, video }.
  */
 (function keepScreenAwake() {
     const SILENT_VIDEO_SRC = '/assets/app/keep-awake-silent.mp4';
@@ -32,24 +31,8 @@
         && typeof navigator.wakeLock.request === 'function'
     );
 
-    /** iPhone/iPad only — headless Studio Viewer must not get a tap gate. */
-    function isIpadLike() {
-        if (typeof navigator === 'undefined') return false;
-        const ua = String(navigator.userAgent || '');
-        if (/iPad|iPhone|iPod/i.test(ua)) return true;
-        // iPadOS 13+ often reports as MacIntel with touch
-        if (navigator.platform === 'MacIntel' && Number(navigator.maxTouchPoints || 0) > 1) {
-            return true;
-        }
-        return false;
-    }
-
-    const requiresGesture = isIpadLike();
-    api.requiresGesture = requiresGesture;
-
     let desired = false;
     let wakeLock = null;
-    let wakeLockFromGesture = false;
     let videoEl = null;
     let mode = 'none';
     let retryTimer = null;
@@ -61,9 +44,8 @@
     }
 
     function confidentlyHeld() {
-        if (!hasWakeLockApi) return videoHeld();
-        if (requiresGesture) return !!(wakeLock && wakeLockFromGesture);
-        return !!wakeLock;
+        if (hasWakeLockApi) return !!wakeLock;
+        return videoHeld();
     }
 
     function refreshMode() {
@@ -78,13 +60,12 @@
 
     function emit() {
         refreshMode();
-        const held = confidentlyHeld();
         const detail = {
             desired,
-            held,
+            held: confidentlyHeld(),
             mode,
-            needsGesture: requiresGesture && desired && !held,
-            requiresGesture,
+            needsGesture: false,
+            requiresGesture: false,
             supported: true,
             wakeLock: !!wakeLock,
             video: videoHeld()
@@ -113,7 +94,7 @@
         if (!desired || retryTimer) return;
         retryTimer = setTimeout(() => {
             retryTimer = null;
-            activate({ fromGesture: false });
+            activate();
         }, ms);
     }
 
@@ -121,12 +102,8 @@
         if (watchdogTimer || !desired) return;
         watchdogTimer = setInterval(() => {
             if (!desired || document.visibilityState !== 'visible') return;
-            if (!confidentlyHeld()) {
-                // Cannot mint a lasting lock without a gesture — just keep video + emit.
-                startVideo().then(() => emit());
-                emit();
-            } else if (hasWakeLockApi && wakeLock && !videoHeld()) {
-                startVideo();
+            if (!confidentlyHeld() || (hasWakeLockApi && !wakeLock) || !videoHeld()) {
+                activate();
             }
         }, WATCHDOG_MS);
     }
@@ -207,25 +184,19 @@
     }
 
     async function releaseWakeLock() {
-        if (!wakeLock) {
-            wakeLockFromGesture = false;
-            return;
-        }
+        if (!wakeLock) return;
         const lock = wakeLock;
         wakeLock = null;
-        wakeLockFromGesture = false;
         try {
             await lock.release();
         } catch (_) { /* already released */ }
         refreshMode();
     }
 
-    /** iPad: only from a tap. Desktop/headless: allowed in background. */
-    function requestWakeLock(fromGesture) {
+    function requestWakeLock() {
         if (!hasWakeLockApi) return Promise.resolve(false);
-        if (requiresGesture && !fromGesture) return Promise.resolve(false);
         if (document.visibilityState !== 'visible') return Promise.resolve(false);
-        if (wakeLock && (!requiresGesture || wakeLockFromGesture)) return Promise.resolve(true);
+        if (wakeLock) return Promise.resolve(true);
 
         let req;
         try {
@@ -236,58 +207,38 @@
 
         return Promise.resolve(req).then((lock) => {
             wakeLock = lock;
-            wakeLockFromGesture = !!fromGesture || !requiresGesture;
             lock.addEventListener('release', () => {
-                if (wakeLock === lock) {
-                    wakeLock = null;
-                    wakeLockFromGesture = false;
-                }
+                if (wakeLock === lock) wakeLock = null;
                 refreshMode();
                 emit();
                 if (desired && document.visibilityState === 'visible') {
                     startVideo();
-                    if (!requiresGesture) scheduleRetry(800);
+                    scheduleRetry(800);
                 }
             });
             emit();
             return true;
-        }).catch(() => {
-            if (fromGesture) wakeLockFromGesture = false;
-            return false;
-        });
+        }).catch(() => false);
     }
 
-    function activate(opts) {
-        const fromGesture = !!(opts && opts.fromGesture);
+    function activate() {
         if (!desired) return Promise.resolve(false);
         if (document.visibilityState !== 'visible') {
             emit();
             return Promise.resolve(false);
         }
+        if (activateInFlight) return activateInFlight;
 
-        if (fromGesture || !requiresGesture) {
-            const wlP = requestWakeLock(fromGesture || !requiresGesture);
-            const vidP = startVideo();
-            return Promise.all([wlP, vidP]).then(() => {
+        activateInFlight = Promise.all([requestWakeLock(), startVideo()])
+            .then(() => {
                 refreshMode();
                 emit();
                 armWatchdog();
                 return confidentlyHeld();
+            })
+            .finally(() => {
+                activateInFlight = null;
             });
-        }
-
-        // iPad background path: video only until the tap gate runs.
-        if (activateInFlight) return activateInFlight;
-        activateInFlight = (async () => {
-            clearRetry();
-            await startVideo();
-            refreshMode();
-            emit();
-            armWatchdog();
-            return confidentlyHeld();
-        })().finally(() => {
-            activateInFlight = null;
-        });
         return activateInFlight;
     }
 
@@ -304,24 +255,24 @@
     api.supported = true;
     api.isDesired = () => desired;
     api.isHeld = () => confidentlyHeld();
-    api.needsGesture = () => requiresGesture && desired && !confidentlyHeld();
+    api.needsGesture = () => false;
     api.getMode = () => mode;
     api.enableFromUserGesture = () => {
         desired = true;
         armWatchdog();
-        return activate({ fromGesture: true });
+        return activate();
     };
     api.setDesired = (on) => {
         const next = !!on;
         if (next === desired) {
-            if (next && !confidentlyHeld()) activate({ fromGesture: false });
+            if (next && !confidentlyHeld()) activate();
             else emit();
             return;
         }
         desired = next;
         if (desired) {
             armWatchdog();
-            activate({ fromGesture: false });
+            activate();
         } else {
             deactivate();
         }
@@ -331,12 +282,10 @@
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible' && desired) {
             wakeLock = null;
-            wakeLockFromGesture = false;
-            activate({ fromGesture: false });
+            activate();
             emit();
         } else if (document.visibilityState !== 'visible') {
             wakeLock = null;
-            wakeLockFromGesture = false;
             refreshMode();
             emit();
         }
@@ -345,8 +294,7 @@
     window.addEventListener('pageshow', () => {
         if (desired) {
             wakeLock = null;
-            wakeLockFromGesture = false;
-            activate({ fromGesture: false });
+            activate();
             emit();
         }
     });

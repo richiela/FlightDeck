@@ -177,5 +177,8 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 
 ## Unreleased — since FlightDeck.v0.18.4
 
-- (none yet)
+- Autodarts: map `SingleInner` → `sN` and `SingleOuter` → `SN` so Quackshot awards +1 on inner singles (was always −1 splash because Autodarts names both `S5`)
+- Derby / Killer: bull hits announce **BULL**/**DBULL** in dart callout (not MISS) — bull still has no horse/wedge effect
+- Dart callout: if `lastThrow` has `miss` plus `number: 'bull'`, prefer BULL over MISS (safety net)
+
 

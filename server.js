@@ -1009,7 +1009,13 @@ function describeThrowParts(gameData, fallbackPayload) {
     let miss = false;
 
     if (lt) {
-        if (lt.miss) {
+        // Bull recorded with miss:true (e.g. "no game effect") must still announce BULL/25
+        if (lt.miss && lt.number === 'bull') {
+            miss = false;
+            const m = Number(lt.dartMultiplier != null ? lt.dartMultiplier : lt.multiplier) || 1;
+            mult = m >= 2 ? 'D' : 'S';
+            value = 'BULL';
+        } else if (lt.miss) {
             miss = true;
             value = 'MISS';
         } else if (lt.number != null && lt.number !== '') {

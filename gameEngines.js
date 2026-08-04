@@ -1758,6 +1758,7 @@ function handleDerbyThrow(gameData, throwSpec = null) {
             multiplier = Number(throwSpec.multiplier) || 1;
             gameData.lastThrow.number = hitNumber;
             gameData.lastThrow.multiplier = multiplier;
+            if (throwSpec.sector) gameData.lastThrow.sector = throwSpec.sector;
 
             const rolledIndex = gameData.players.findIndex(p => p.targetNumber === hitNumber);
             if (rolledIndex >= 0) {
@@ -1782,8 +1783,18 @@ function handleDerbyThrow(gameData, throwSpec = null) {
                     }
                 }
             }
+        } else if (throwSpec.miss) {
+            // True board miss / bounce
+            gameData.lastThrow.miss = true;
+        } else if (throwSpec.number === 'bull') {
+            // Bull is never a horse number — no race effect, but announce BULL/25 not MISS
+            multiplier = Number(throwSpec.multiplier) || 1;
+            gameData.lastThrow.miss = false;
+            gameData.lastThrow.hit = false;
+            gameData.lastThrow.number = 'bull';
+            gameData.lastThrow.multiplier = multiplier;
+            if (throwSpec.sector) gameData.lastThrow.sector = throwSpec.sector;
         } else {
-            // True board miss / bounce — not just "wrong horse number"
             gameData.lastThrow.miss = true;
         }
     } else if (Math.random() < 0.60) {
@@ -2089,16 +2100,21 @@ function handleKillerThrow(gameData, throwSpec = null) {
     const roundMultiplier = killerRoundMultiplier(gameData.currentRound);
     const multiplier = dartMultiplier * roundMultiplier;
     const trueMultHit = dartMultiplier >= 2;
+    const isBullHit = !!(throwSpec && !throwSpec.miss && throwSpec.number === 'bull');
 
     gameData.lastThrow = {
         hitNumber,
         effect: 'miss',
-        miss: hitNumber === null,
-        number: throwSpec ? throwSpec.number : hitNumber,
+        // Bull isn't a wedge — no Killer effect, but callout must say BULL not MISS
+        miss: hitNumber === null && !isBullHit,
+        number: throwSpec
+            ? (throwSpec.miss ? null : throwSpec.number)
+            : hitNumber,
         multiplier,
         dartMultiplier,
         roundMultiplier
     };
+    if (throwSpec && throwSpec.sector) gameData.lastThrow.sector = throwSpec.sector;
 
     let becameKiller = false;
     let lostKiller = false;
@@ -2286,7 +2302,11 @@ function resolveQuackshotHit(throwSpec) {
     if (sector === '25' || (throwSpec.number === 'bull' && throwSpec.multiplier === 1)) {
         return { zone: 'bull', points: 2, bullseye: true, label: '+2', title: 'Outer Bull!' };
     }
-    if (sector && /^s(20|1[0-9]|[1-9])$/.test(sector)) {
+    // Inner single (between treble & bull): Scolia/OpenDarts use sN; Autodarts uses bed→sN
+    if (
+        (sector && /^s(20|1[0-9]|[1-9])$/.test(sector))
+        || (sector && /singleinner/i.test(sector))
+    ) {
         return { zone: 'inner_single', points: 1, bullseye: false, label: '+1', title: null };
     }
     if (throwSpec.multiplier === 3 || (sector && /^T(20|1[0-9]|[1-9])$/.test(sector))) {

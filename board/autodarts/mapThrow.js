@@ -59,11 +59,28 @@ function mapAutodartsSegment(segment) {
         else mult = 1;
     }
 
+    // Quackshot (and Scolia-style sectors) need inner vs outer single:
+    //   SingleInner → sN  (+1 duck)
+    //   SingleOuter → SN  (−1 splash)
+    // Autodarts names both as "S5"; the bed field is the real discriminator.
+    let sector = name;
+    if (mult === 1) {
+        if (/singleinner/i.test(bed) || /^inner/i.test(bed)) {
+            sector = `s${n}`;
+        } else if (/singleouter/i.test(bed) || /^outer/i.test(bed)) {
+            sector = `S${n}`;
+        } else if (!sector) {
+            sector = `S${n}`;
+        }
+    } else if (!sector) {
+        sector = `${mult === 3 ? 'T' : 'D'}${n}`;
+    }
+
     return {
         type: 'TRIGGER_SPECIFIC_THROW',
         number: n,
         multiplier: mult,
-        sector: name || `${mult === 3 ? 'T' : mult === 2 ? 'D' : 'S'}${n}`
+        sector
     };
 }
 

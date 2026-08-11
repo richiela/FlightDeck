@@ -325,50 +325,12 @@
         .global-bust-screen .demo-avatar-frame { border-color: #ff2a2a; box-shadow: 0 0 0 4px rgba(0,0,0,0.45), 0 0 28px rgba(255,42,42,0.45); }
         .global-bust-screen .demo-eyebrow { color: #ff8a8a; }
 
-        .global-bust-screen .bust-split {
-            position: relative;
-            z-index: 3;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: stretch;
-            width: 100%;
-            height: 100%;
-            padding: 48px 36px;
-            box-sizing: border-box;
-            gap: 28px;
-        }
-        .global-bust-screen .bust-stage-left {
-            flex: 1 1 50%;
-            min-width: 0;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        .global-bust-screen .bust-video-pane {
-            flex: 1 1 50%;
-            min-width: 0;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-        }
+        /* Split/stage/video-pane geometry now comes from shared .fd-winner-split/.fd-winner-stage/.fd-winner-video-pane
+           (event-videos.css) — markup below carries both class sets. Only the bust-specific video accent stays local:
+           red border + no colored glow (shared default is gold w/ a glow; the Winner screen below uses it unmodified). */
         .global-bust-screen .bust-video-pane video {
-            width: 100%;
-            max-width: 640px;
-            max-height: min(68vh, 520px);
-            object-fit: contain;
-            border-radius: 10px;
-            border: 3px solid #ff2a2a;
+            border-color: #ff2a2a;
             box-shadow: 0 12px 40px rgba(0,0,0,0.55);
-            background: #000;
-            opacity: 0;
-            transform: scale(1.12);
-            filter: blur(6px);
         }
 
         body.global-animate-bust .global-bust-screen { background: rgba(13, 3, 15, 0.82); opacity: 1; pointer-events: auto; }
@@ -381,15 +343,13 @@
         body.global-animate-bust .bust-video-pane video { animation: globalSlam 0.45s cubic-bezier(0.15, 0.85, 0.3, 1.1) 0.1s forwards; }
         body.global-animate-bust .match-layout { animation: masterScreenShake 0.45s ease-in-out; filter: blur(2px); }
 
-        /* Classic full-screen bust when Video toggle is off */
-        .global-bust-screen.video-off .bust-video-pane { display: none; }
-        .global-bust-screen.video-off .bust-split {
-            justify-content: center;
-            padding: 48px 36px;
-        }
+        /* Classic full-screen bust when Video toggle is off.
+           display:none / justify-content:center already come from shared .video-off rules;
+           height:100% below counters the shared default's height:auto so Demolition's centering is unchanged. */
         .global-bust-screen.video-off .bust-stage-left {
             flex: 0 1 auto;
             width: auto;
+            height: 100%;
         }
         .global-bust-screen.video-off .demo-headline { font-size: 6.2rem; }
 
@@ -475,51 +435,9 @@
         .global-winner-screen .demo-eyebrow { color: var(--gold-glow); position: relative; z-index: 2; }
         .global-winner-screen .demo-avatar-frame { border-color: var(--gold); position: relative; z-index: 2; box-shadow: 0 0 0 4px rgba(0,0,0,0.45), 0 0 34px rgba(197,160,89,0.55); }
 
-        .global-winner-screen .winner-split {
-            position: relative;
-            z-index: 3;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: stretch;
-            width: 100%;
-            height: 100%;
-            padding: 48px 36px;
-            box-sizing: border-box;
-            gap: 28px;
-        }
-        .global-winner-screen .winner-stage-left {
-            flex: 1 1 50%;
-            min-width: 0;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-        }
-        .global-winner-screen .winner-video-pane {
-            flex: 1 1 50%;
-            min-width: 0;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-        }
-        .global-winner-screen .winner-video-pane video {
-            width: 100%;
-            max-width: 640px;
-            max-height: min(68vh, 520px);
-            object-fit: contain;
-            border-radius: 10px;
-            border: 3px solid var(--gold);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 28px rgba(197,160,89,0.35);
-            background: #000;
-            opacity: 0;
-            transform: scale(1.12);
-            filter: blur(6px);
-        }
+        /* Split/stage/video-pane geometry + video accent now come entirely from shared .fd-winner-split/.fd-winner-stage/
+           .fd-winner-video-pane (event-videos.css) — its default border/glow color (#c5a059) already equals --gold,
+           so no local override is needed here (unlike Bust, which stays red). Markup carries both class sets. */
 
         .winner-fx-layer {
             position: absolute; inset: 0;
@@ -554,15 +472,13 @@
         body.global-animate-winner .winner-video-pane video { animation: globalSlam 0.45s cubic-bezier(0.15, 0.85, 0.3, 1.1) 0.1s forwards; }
         body.global-animate-winner .match-layout { filter: blur(2px); }
 
-        /* Classic full-screen winner when Video toggle is off */
-        .global-winner-screen.video-off .winner-video-pane { display: none; }
-        .global-winner-screen.video-off .winner-split {
-            justify-content: center;
-            padding: 48px 36px;
-        }
+        /* Classic full-screen winner when Video toggle is off.
+           display:none / justify-content:center already come from shared .video-off rules;
+           height:100% below counters the shared default's height:auto so Demolition's centering is unchanged. */
         .global-winner-screen.video-off .winner-stage-left {
             flex: 0 1 auto;
             width: auto;
+            height: 100%;
         }
         .global-winner-screen.video-off .demo-headline { font-size: 6.2rem; }
 
@@ -813,8 +729,8 @@
     <div class="demo-overlay global-bust-screen" id="globalBustScreen">
         <div class="demo-hazard-bar top danger"></div>
         <div class="demo-rubble" id="bustRubbleLayer"></div>
-        <div class="bust-split">
-            <div class="demo-stage bust-stage-left">
+        <div class="bust-split fd-winner-split">
+            <div class="demo-stage bust-stage-left fd-winner-stage">
                 <div class="demo-eyebrow">Structural Failure</div>
                 <div class="demo-avatar-frame">
                     <div class="demo-avatar-core" id="globalBustAvatarSlot"></div>
@@ -822,7 +738,7 @@
                 <h1 class="demo-headline">Busted</h1>
                 <div class="demo-subtext" id="globalBustSublabel">Tower Reset</div>
             </div>
-            <div class="bust-video-pane">
+            <div class="bust-video-pane fd-winner-video-pane">
                 <video id="bustVideo" class="fd-event-video" playsinline preload="auto"></video>
             </div>
         </div>
@@ -833,8 +749,8 @@
         <div class="demo-hazard-bar top"></div>
         <div class="winner-fx-layer" id="winnerFxLayer"></div>
         <div class="demo-pillar-glow" aria-hidden="true"></div>
-        <div class="winner-split">
-            <div class="demo-stage winner-stage-left">
+        <div class="winner-split fd-winner-split">
+            <div class="demo-stage winner-stage-left fd-winner-stage">
                 <div class="demo-eyebrow">Match Complete</div>
                 <div class="demo-avatar-pair" id="globalWinnerAvatarPair">
                     <div class="demo-avatar-frame brick-ring">
@@ -844,7 +760,7 @@
                 <h1 class="demo-headline" id="globalWinnerNameBanner">WINNER</h1>
                 <div class="demo-subtext">TOWER CLEARED!</div>
             </div>
-            <div class="winner-video-pane">
+            <div class="winner-video-pane fd-winner-video-pane">
                 <video id="winnerVideo" class="fd-winner-video" playsinline preload="auto"></video>
             </div>
         </div>

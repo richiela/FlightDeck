@@ -175,12 +175,22 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 - Demolition/X01 bust (Video on): advance when bust clip ends (`BUST_VIDEO_COMPLETE`) instead of always holding 8.5s — removes dead pause after shorter clips; 8.5s remains safety max
 - TVMRecorder: `transpose: 0` (or false/none) means **no rotation** — was broken by `|| 1` which forced rotate-90 and made Brio clips portrait (720×1280)
 
-## Unreleased — since FlightDeck.v0.18.4
+## v0.18.5 — FlightDeck.v0.18.5 (Aug 11, 2026)
 
 - Autodarts: map `SingleInner` → `sN` and `SingleOuter` → `SN` so Quackshot awards +1 on inner singles (was always −1 splash because Autodarts names both `S5`)
 - Derby / Killer: bull hits announce **BULL**/**DBULL** in dart callout (not MISS) — bull still has no horse/wedge effect
 - Dart callout: if `lastThrow` has `miss` plus `number: 'bull'`, prefer BULL over MISS (safety net)
 - Viewer keep-awake: remove full-screen tap gate (was annoying on Mac Mini Viewer); auto Wake Lock + silent video only
+- Cleanup (Killer/X01/Cricket/Shanghai/Derby/Limbo): removed the dead `window.FC_renderPlayerBadge ? ... : '<div class="avatar-box">...'` fallback in each roster render — `shared-player-theme.js` is always loaded before this code runs, so the fallback branch never executed; now calls `FC_renderPlayerBadge()` directly. No visual change.
+- Cleanup (Derby/Limbo): removed the local `.avatar-box` base rule (size/border/background/shadow) — fully duplicated `.fc-player-badge .avatar-box` in `shared-player-theme.css`; kept only each game's own `transition` value, which the shared rule doesn't set. No visual change (Derby's box-shadow now matches the shared 0.12 alpha instead of its previous 0.1, a barely-perceptible nudge).
+- Cleanup (Demolition): Bust/Winner overlay split layout (`bust-split`/`winner-split` + stage/video-pane) now backed by the shared `.fd-winner-split`/`.fd-winner-stage`/`.fd-winner-video-pane` classes from `event-videos.css` instead of duplicating that geometry locally; removed the now-redundant local copies (base layout + `video-off` display/justify-content overrides). Kept Demolition-specific deltas as explicit local overrides: Bust's red/no-glow video border (Winner's gold+glow already matched the shared default exactly), and an explicit `height: 100%` in the `video-off` state so Demolition's centering doesn't pick up the shared default's `height: auto`. No visual change — verified with before/after screenshots of every debug-preview screen (bust, checkout, playoff, winner, next) in both Video-on and Video-off modes, real doubles + true singles lineups, and a genuine two-avatar doubles-team checkout (not just the debug-preview shortcut); only diffs were animated confetti/rubble particle positions and which random winner clip played, not layout.
+- Cleanup (Derby): removed the redundant `window.FC_renderPlayerBadge` existence guard on the incremental avatar-refresh path (`else if (window.FC_renderPlayerBadge)` → `else`) — the shared script always loads, so the check was always true. No behavior change.
+- Cleanup (`event-videos.css`): collapsed the three copy-pasted "multi-mode takeover" blocks (`.cricket-takeover`, `.killer-takeover`, `.sh-takeover` — each ~35 lines of identical split/stage/video-pane overrides, differing only in selector) into one shared rule set with combined selectors. Same selectors, same declared properties, just deduplicated — mathematically equivalent CSS. No visual change — verified with before/after screenshots across all of Killer's split modes (became/lost/death/winner) and Cricket/Shanghai's winner mode, video-on and video-off; Cricket came back byte-identical, Killer/Shanghai diffs were only random video-clip content.
+- Cleanup (Harper Wins): `.hw-avatar` (event-card spotlight portrait, e.g. "Pattern Dart" overlay) now sized via `calc(var(--fc-avatar-overlay) - 20px)` instead of a hardcoded `120px`. Pixel-exact — 140 − 20 = 120 — verified 0px diff before/after on Triple/Bullseye/Miss event cards.
+
+## Unreleased — since FlightDeck.v0.18.5
+
+- None yet.
 
 
 

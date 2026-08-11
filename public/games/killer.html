@@ -1544,9 +1544,7 @@
                             });
                         }
                     } else {
-                        badge = window.FC_renderPlayerBadge
-                            ? FC_renderPlayerBadge(player.avatar, player.name, { colorIndex: idx, orbit: isActive })
-                            : `<div class="avatar-box">${renderAvatarHtml(player.avatar, player.name, 'initials')}</div>`;
+                        badge = FC_renderPlayerBadge(player.avatar, player.name, { colorIndex: idx, orbit: isActive });
                     }
                     const wrapClass = isDuo ? 'edge-avatar-wrap is-duo' : 'edge-avatar-wrap';
                     const growAttr = isDuo ? ` data-duo-grow="${duoGrow}"` : '';

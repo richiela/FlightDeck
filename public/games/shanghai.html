@@ -1095,9 +1095,7 @@
                             isActive, throwerIdx, colorIndex: idx, dartsHtml: dots
                         });
                     } else {
-                        const badge = window.FC_renderPlayerBadge
-                            ? FC_renderPlayerBadge(p.avatar, p.name, { colorIndex: idx, orbit: isActive })
-                            : `<div class="avatar-box">${renderAvatarHtml(p.avatar, p.name)}</div>`;
+                        const badge = FC_renderPlayerBadge(p.avatar, p.name, { colorIndex: idx, orbit: isActive });
                         identity = `${badge}<div class="dart-dots">${dots}</div>`;
                     }
 

@@ -77,87 +77,13 @@
     height: auto;
 }
 
-/* Cricket: overlay is multi-mode — only split on winner */
-.cricket-takeover .fd-winner-split {
-    flex-direction: column;
-    justify-content: center;
-    padding: 0;
-    gap: 0;
-    width: auto;
-    height: auto;
-}
-
-.cricket-takeover .fd-winner-stage {
-    flex: 0 1 auto;
-    height: auto;
-}
-
-.cricket-takeover .fd-winner-video-pane {
-    display: none;
-}
-
-.cricket-takeover.mode-winner .fd-winner-split {
-    flex-direction: row;
-    justify-content: stretch;
-    width: 100%;
-    height: 100%;
-    padding: 48px 36px;
-    gap: 28px;
-}
-
-.cricket-takeover.mode-winner .fd-winner-stage {
-    flex: 1 1 50%;
-    height: 100%;
-}
-
-.cricket-takeover.mode-winner:not(.video-off) .fd-winner-video-pane {
-    display: flex;
-}
-
-/* Killer takeover: multi-mode — only split on became / lost / death (eliminated) */
-.killer-takeover .fd-winner-split {
-    flex-direction: column;
-    justify-content: center;
-    padding: 0;
-    gap: 0;
-    width: auto;
-    height: auto;
-}
-
-.killer-takeover .fd-winner-stage {
-    flex: 0 1 auto;
-    height: auto;
-}
-
-.killer-takeover .fd-winner-video-pane {
-    display: none;
-}
-
-.killer-takeover.mode-became .fd-winner-split,
-.killer-takeover.mode-lost .fd-winner-split,
-.killer-takeover.mode-death .fd-winner-split {
-    flex-direction: row;
-    justify-content: stretch;
-    width: 100%;
-    height: 100%;
-    padding: 48px 36px;
-    gap: 28px;
-}
-
-.killer-takeover.mode-became .fd-winner-stage,
-.killer-takeover.mode-lost .fd-winner-stage,
-.killer-takeover.mode-death .fd-winner-stage {
-    flex: 1 1 50%;
-    height: 100%;
-}
-
-.killer-takeover.mode-became:not(.video-off) .fd-winner-video-pane,
-.killer-takeover.mode-lost:not(.video-off) .fd-winner-video-pane,
-.killer-takeover.mode-death:not(.video-off) .fd-winner-video-pane {
-    display: flex;
-}
-
-/* Shanghai: multi-mode — only split on winner (next/draw stay centered) */
+/* Multi-mode takeovers (Cricket, Killer, Shanghai): the overlay covers several event types,
+   but only the game's real "winner" mode(s) split into the video-pane layout — every other
+   mode on the same takeover stays centered. Three games, one rule set: only the selector list
+   differs per game (which wrapper class, which mode(s) count as the split trigger). Killer has
+   three split modes (became/lost/death are all eliminations); Cricket/Shanghai have one (winner). */
+.cricket-takeover .fd-winner-split,
+.killer-takeover .fd-winner-split,
 .sh-takeover .fd-winner-split {
     flex-direction: column;
     justify-content: center;
@@ -167,15 +93,23 @@
     height: auto;
 }
 
+.cricket-takeover .fd-winner-stage,
+.killer-takeover .fd-winner-stage,
 .sh-takeover .fd-winner-stage {
     flex: 0 1 auto;
     height: auto;
 }
 
+.cricket-takeover .fd-winner-video-pane,
+.killer-takeover .fd-winner-video-pane,
 .sh-takeover .fd-winner-video-pane {
     display: none;
 }
 
+.cricket-takeover.mode-winner .fd-winner-split,
+.killer-takeover.mode-became .fd-winner-split,
+.killer-takeover.mode-lost .fd-winner-split,
+.killer-takeover.mode-death .fd-winner-split,
 .sh-takeover.mode-winner .fd-winner-split {
     flex-direction: row;
     justify-content: stretch;
@@ -185,11 +119,19 @@
     gap: 28px;
 }
 
+.cricket-takeover.mode-winner .fd-winner-stage,
+.killer-takeover.mode-became .fd-winner-stage,
+.killer-takeover.mode-lost .fd-winner-stage,
+.killer-takeover.mode-death .fd-winner-stage,
 .sh-takeover.mode-winner .fd-winner-stage {
     flex: 1 1 50%;
     height: 100%;
 }
 
+.cricket-takeover.mode-winner:not(.video-off) .fd-winner-video-pane,
+.killer-takeover.mode-became:not(.video-off) .fd-winner-video-pane,
+.killer-takeover.mode-lost:not(.video-off) .fd-winner-video-pane,
+.killer-takeover.mode-death:not(.video-off) .fd-winner-video-pane,
 .sh-takeover.mode-winner:not(.video-off) .fd-winner-video-pane {
     display: flex;
 }

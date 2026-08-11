@@ -407,8 +407,9 @@
             padding: 6px 18px;
         }
         .hw-avatar {
-            width: 120px;
-            height: 120px;
+            /* 120px, derived from the shared overlay token instead of a magic number (140 - 20 = 120, pixel-exact). */
+            width: calc(var(--fc-avatar-overlay) - 20px);
+            height: calc(var(--fc-avatar-overlay) - 20px);
             border-radius: 50%;
             overflow: hidden;
             border: 4px solid var(--frame);

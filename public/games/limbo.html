@@ -197,13 +197,8 @@
         /* FC_ACTIVE_RING: scale removed; ring/glow from shared-player-theme.css */
         .player-container.eliminated { opacity: 0.2; filter: grayscale(1); }
 
-        .avatar-box {
-            width: var(--fc-avatar-inplay); height: var(--fc-avatar-inplay); border-radius: 50%; border: 4px solid #fff;
-            background: #fff; overflow: hidden; display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12); transition: border-color 0.2s ease;
-        }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-        .avatar-box .initials { font-size: 1.6rem; font-weight: 900; color: var(--fc-initials); }
+        /* Box model/border/shadow come from shared-player-theme.css .fc-player-badge .avatar-box; only the transition is Limbo-specific. */
+        .avatar-box { transition: border-color 0.2s ease; }
 
         .player-name-plate {
             position: absolute; bottom: -12px; padding: 2px 8px; border-radius: 3px;
@@ -1405,9 +1400,7 @@
                             dartsHtml: dotsInner
                         });
                     } else {
-                        const badge = window.FC_renderPlayerBadge
-                            ? FC_renderPlayerBadge(p.avatar, p.name, { colorIndex: idx, orbit: isActive })
-                            : `<div class="avatar-box">${renderAvatarHtml(p.avatar, p.name, 'initials')}</div><div class="player-name-plate">${p.name}</div>`;
+                        const badge = FC_renderPlayerBadge(p.avatar, p.name, { colorIndex: idx, orbit: isActive });
                         identityHtml = `${badge}<div class="dart-dots">${dotsInner}</div>`;
                     }
 

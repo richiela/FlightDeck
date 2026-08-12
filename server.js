@@ -552,64 +552,8 @@ function clearPlayerFromDoublesTeams(playerId) {
 
 /**
  * Move within doubles slots, or to/from bench (team === LINEUP_BENCH).
- * Bench → slot uses request playerId; occupied dest is swapped to bench.
+ * Empty dest → place there; occupied dest → swap (bench→occupied sends occupant to bench).
  */
-function flattenDoublesTeams(teams) {
-    const flat = [];
-    const src = teams || emptyDoublesTeams();
-    for (let t = 0; t < DOUBLES_TEAM_COUNT; t++) {
-        for (let s = 0; s < DOUBLES_SLOTS_PER_TEAM; s++) {
-            flat.push((src[t] && src[t][s]) || null);
-        }
-    }
-    return flat;
-}
-
-function unflattenDoublesTeams(flat) {
-    const teams = emptyDoublesTeams();
-    (flat || []).forEach((id, i) => {
-        if (i >= DOUBLES_TEAM_COUNT * DOUBLES_SLOTS_PER_TEAM) return;
-        const teamIdx = Math.floor(i / DOUBLES_SLOTS_PER_TEAM);
-        const slotIdx = i % DOUBLES_SLOTS_PER_TEAM;
-        teams[teamIdx][slotIdx] = id || null;
-    });
-    return teams;
-}
-
-/** Fixed-length insert-shift (Mac-dock / Waiting style — not swap).
- * Dropping on index `toIdx` inserts there (before what was in that slot).
- */
-function insertShiftFixed(arr, fromIdx, toIdx) {
-    if (!Array.isArray(arr) || fromIdx === toIdx) return arr ? arr.slice() : [];
-    if (fromIdx < 0 || fromIdx >= arr.length || toIdx < 0 || toIdx >= arr.length) {
-        return arr.slice();
-    }
-    const next = arr.slice();
-    const [item] = next.splice(fromIdx, 1);
-    let at = toIdx;
-    if (fromIdx < toIdx) at -= 1;
-    at = Math.max(0, Math.min(at, next.length));
-    next.splice(at, 0, item);
-    return next;
-}
-
-/**
- * Insert value at index in a fixed-length slot array (drops a null to keep length).
- * Returns null if there is no empty slot to absorb the insert.
- */
-function insertIntoFixedSlots(arr, toIdx, value) {
-    const next = arr.slice();
-    const nullIdx = next.lastIndexOf(null);
-    if (nullIdx < 0) return null;
-    next.splice(nullIdx, 1);
-    let at = toIdx;
-    if (nullIdx < toIdx) at = toIdx - 1;
-    if (at < 0) at = 0;
-    if (at > next.length) at = next.length;
-    next.splice(at, 0, value);
-    return next;
-}
-
 function moveDoublesPlayer(fromTeam, fromSlot, toTeam, toSlot, playerId) {
     const teams = gameState.doublesTeams;
     if (!teams) return false;
@@ -628,15 +572,11 @@ function moveDoublesPlayer(fromTeam, fromSlot, toTeam, toSlot, playerId) {
         return false;
     }
 
-    const toFlat = toTeam * DOUBLES_SLOTS_PER_TEAM + toSlot;
-
     if (fromTeam === LINEUP_BENCH) {
         if (!playerId || !playersByIdMap(gameState.players).has(playerId)) return false;
         clearPlayerFromDoublesTeams(playerId);
-        const flat = flattenDoublesTeams(teams);
-        const next = insertIntoFixedSlots(flat, toFlat, playerId);
-        if (!next) return false;
-        gameState.doublesTeams = unflattenDoublesTeams(next);
+        // Empty → place; occupied → occupant returns to bench
+        teams[toTeam][toSlot] = playerId;
         return true;
     }
 
@@ -649,15 +589,17 @@ function moveDoublesPlayer(fromTeam, fromSlot, toTeam, toSlot, playerId) {
     const movingId = teams[fromTeam][fromSlot];
     if (!movingId) return false;
     if (fromTeam === toTeam && fromSlot === toSlot) return false;
-    const fromFlat = fromTeam * DOUBLES_SLOTS_PER_TEAM + fromSlot;
-    const flat = flattenDoublesTeams(teams);
-    gameState.doublesTeams = unflattenDoublesTeams(insertShiftFixed(flat, fromFlat, toFlat));
+
+    const destId = teams[toTeam][toSlot];
+    teams[toTeam][toSlot] = movingId;
+    teams[fromTeam][fromSlot] = destId || null; // swap, or leave source empty
     return true;
 }
 
 /**
  * Move within singles slots, or to/from bench (slot === LINEUP_BENCH).
- * Within lineup / bench→slot: insert-shift (not swap). Singles caps at SINGLES_MAX_PLAYERS seated.
+ * Empty dest → place there; occupied dest → swap (bench→occupied sends occupant to bench).
+ * Singles caps at SINGLES_MAX_PLAYERS when seating into an empty slot from the bench.
  */
 function moveSinglesPlayer(fromSlot, toSlot, playerId) {
     if (!gameState.singlesLineup) gameState.singlesLineup = emptySinglesLineup();
@@ -676,10 +618,10 @@ function moveSinglesPlayer(fromSlot, toSlot, playerId) {
     if (fromSlot === LINEUP_BENCH) {
         if (!playerId || !playersByIdMap(gameState.players).has(playerId)) return false;
         clearPlayerFromSinglesLineup(playerId);
-        if (getSinglesSeatedIds().length >= SINGLES_MAX_PLAYERS) return false;
-        const next = insertIntoFixedSlots(lineup, toSlot, playerId);
-        if (!next) return false;
-        gameState.singlesLineup = next;
+        const destOccupied = !!lineup[toSlot];
+        if (!destOccupied && getSinglesSeatedIds().length >= SINGLES_MAX_PLAYERS) return false;
+        // Empty → place; occupied → replace (old occupant back on bench via clear + not re-seated)
+        lineup[toSlot] = playerId;
         return true;
     }
 
@@ -687,7 +629,10 @@ function moveSinglesPlayer(fromSlot, toSlot, playerId) {
     const movingId = lineup[fromSlot];
     if (!movingId) return false;
     if (fromSlot === toSlot) return false;
-    gameState.singlesLineup = insertShiftFixed(lineup, fromSlot, toSlot);
+
+    const destId = lineup[toSlot];
+    lineup[toSlot] = movingId;
+    lineup[fromSlot] = destId || null;
     return true;
 }
 

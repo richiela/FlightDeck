@@ -191,6 +191,8 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 ## Unreleased — since FlightDeck.v0.18.5
 
 - Control registration: player cards (waiting bench + singles/doubles lineup) use **pointer drag** instead of HTML5 DnD so **iPad finger** can reorder / seat players the same way a mouse can (HTML5 drag-and-drop does not fire for touch on iPadOS Safari)
+- Control registration left panel: photo preview is the flexible middle (`min-height` 120px, shrinks first) so Register + Lineup buttons stay inside the gold box on shorter / non-fullscreen iPad viewports
+- Control lineup drag: drop on an **empty** slot places the player there; drop on an **occupied** slot **swaps** (bench→occupied sends the previous occupant back to Waiting). Replaces the old insert-shift / dock-pack behavior that made open seats feel blocked. Singles still caps at 6 seated (7th onto an empty slot still auto-promotes to doubles)
 
 
 

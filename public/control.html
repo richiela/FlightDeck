@@ -286,21 +286,33 @@
             background-color: rgba(26, 26, 31, 0.8);
             border: 2px solid var(--gold);
             border-radius: 6px;
-            padding: 10px 14px;
+            padding: 10px 14px 12px;
             display: flex;
             flex-direction: column;
+            gap: 6px;
             box-sizing: border-box;
             min-height: 0;
+            overflow: hidden;
         }
-        .form-group { margin-bottom: 8px; }
+        .form-group { margin-bottom: 0; flex-shrink: 0; }
+        /* Photo block absorbs leftover height so Register + Lineup stay inside the gold box */
+        .form-group.form-group-photo {
+            flex: 1 1 auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.form-group-photo > label { flex-shrink: 0; }
         label { display: block; text-transform: uppercase; color: var(--gold-glow); letter-spacing: 1.5px; margin-bottom: 5px; font-size: 0.8rem; }
         input[type="text"] { width: 100%; background-color: #0b0b0c; border: 2px solid #444; border-radius: 4px; padding: 9px 12px; color: #fff; font-size: 1rem; box-sizing: border-box; }
         input[type="text"]:focus { border-color: var(--gold); outline: none; }
         .camera-wrap { display: flex; flex-direction: column; gap: 6px; flex: 1 1 auto; min-height: 0; }
         .camera-box {
             width: 100%;
-            height: min(42vh, 260px);
-            min-height: 200px;
+            flex: 1 1 auto;
+            height: auto;
+            min-height: 120px;
+            max-height: min(42vh, 260px);
             background: #000; border: 2px solid #444; border-radius: 4px;
             position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
             --guide-d: 180px;
@@ -366,14 +378,26 @@
             padding: 7px 12px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase;
             border-radius: 4px; font-weight: bold; letter-spacing: 1px;
         }
-        .action-btn { background-color: var(--crimson); border: 2px solid var(--gold); color: #fff; padding: 10px; font-size: 0.95rem; text-transform: uppercase; font-weight: bold; cursor: pointer; margin-top: 8px; border-radius: 4px; }
+        .action-btn {
+            background-color: var(--crimson);
+            border: 2px solid var(--gold);
+            color: #fff;
+            padding: 10px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 2px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
         .lineup-bulk-section {
             margin-top: auto;
-            padding-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid #444;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
         }
         .lineup-bulk-section > label {
@@ -2179,7 +2203,7 @@
                     <input type="text" id="playerNameInput" placeholder="Ex: Bullseye Bill" autocomplete="off">
                     <div id="registrationError" class="registration-error" hidden></div>
                 </div>
-                <div class="form-group">
+                <div class="form-group form-group-photo">
                     <label>Photo</label>
                     <div class="camera-wrap">
                         <div class="camera-box" id="cameraBox">
@@ -4631,26 +4655,23 @@
             return ids;
         }
 
-        function previewLineupInsert(flatIds, fromFlat, toFlat, incomingId) {
+        function previewLineupPlaceOrSwap(flatIds, fromFlat, toFlat, incomingId) {
             const next = flatIds.slice();
+            if (toFlat < 0 || toFlat >= next.length) return next;
+
             if (fromFlat >= 0 && fromFlat < next.length) {
-                // Match server insertShiftFixed (drop on slot = insert at that seat)
-                const [item] = next.splice(fromFlat, 1);
-                let at = toFlat;
-                if (fromFlat < toFlat) at -= 1;
-                at = Math.max(0, Math.min(at, next.length));
-                next.splice(at, 0, item);
+                // Seated → seated: place into empty, or swap if occupied
+                const moving = next[fromFlat];
+                if (!moving) return next;
+                const dest = next[toFlat];
+                next[toFlat] = moving;
+                next[fromFlat] = dest || null;
                 return next;
             }
-            // From bench: insert incoming, drop a trailing null to keep length
+
+            // From bench: place into empty, or replace occupied (occupant → bench)
             if (!incomingId) return next;
-            const nullIdx = next.lastIndexOf(null);
-            if (nullIdx < 0) return next;
-            next.splice(nullIdx, 1);
-            let at = toFlat;
-            if (nullIdx < toFlat) at = toFlat - 1;
-            at = Math.max(0, Math.min(at, next.length));
-            next.splice(at, 0, incomingId);
+            next[toFlat] = incomingId;
             return next;
         }
 
@@ -4716,7 +4737,7 @@
             if (targetSlot) targetSlot.classList.add('lineup-insert-target');
 
             const flatIds = getLineupFlatIdsFromDom();
-            const preview = previewLineupInsert(
+            const preview = previewLineupPlaceOrSwap(
                 flatIds,
                 lineupDock.fromFlat,
                 toFlat,

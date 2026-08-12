@@ -426,6 +426,33 @@
             display: none;
         }
         .player-card { background: rgba(26, 26, 31, 0.8); border: 2px solid rgba(51, 51, 51, 0.8); padding: 20px 10px 15px 10px; border-radius: 6px; position: relative; display: flex; flex-direction: column; justify-content: flex-start; align-items: center; box-sizing: border-box; overflow: hidden; }
+        /* Pointer drag (mouse + iPad): claim gestures on cards; ghost follows finger */
+        .player-card.player-card-draggable {
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        .player-card-drag-ghost {
+            position: fixed;
+            z-index: 10000;
+            pointer-events: none;
+            margin: 0;
+            opacity: 0.92;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+            transform: scale(1.03);
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        body.is-player-card-dragging {
+            cursor: grabbing !important;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        body.is-player-card-dragging .player-card-draggable {
+            cursor: grabbing;
+        }
         .card-del { position: absolute; top: 8px; right: 12px; background: none; border: none; color: #777; font-size: 1.4rem; cursor: pointer; z-index: 5; }
         .card-avatar { width: 80%; aspect-ratio: 1 / 1; max-height: 150px; border-radius: 50%; border: 3px solid var(--gold); background: #25252c; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0,0,0,0.5); flex-shrink: 0; margin-bottom: 10px; opacity: 1; }
         .card-avatar img {
@@ -4240,14 +4267,255 @@
 
         /* --- Lineup doubles UI (revert: remove renderRegistrationLineup through initLineupModeToggle) --- */
         const LINEUP_BENCH = -1;
+        const PLAYER_CARD_DRAG_THRESHOLD_PX = 10;
 
-        function parseDragPayload(e) {
-            try {
-                return JSON.parse(e.dataTransfer.getData('text/plain') || '{}');
-            } catch (_) {
-                return null;
+        /** Pointer-based card drag (mouse + touch). HTML5 DnD does not work on iPad. */
+        const playerCardPointerDrag = {
+            tracking: false,
+            active: false,
+            pointerId: null,
+            startX: 0,
+            startY: 0,
+            payload: null,
+            card: null,
+            ghost: null,
+            ghostOffsetX: 0,
+            ghostOffsetY: 0,
+            lastTarget: null
+        };
+
+        function buildDragPayload(p, dragMeta) {
+            const payload = { playerId: p.id, kind: dragMeta.kind };
+            if (dragMeta.kind === 'bench') {
+                payload.fromTeam = LINEUP_BENCH;
+                payload.fromSlot = LINEUP_BENCH;
+            } else if (dragMeta.kind === 'singles') {
+                payload.fromSlot = dragMeta.slotIdx;
+                payload.fromTeam = LINEUP_BENCH;
+            } else {
+                payload.fromTeam = dragMeta.teamIdx;
+                payload.fromSlot = dragMeta.slotIdx;
+            }
+            return payload;
+        }
+
+        function resolvePlayerCardDropTarget(clientX, clientY) {
+            const el = document.elementFromPoint(clientX, clientY);
+            if (!el) return null;
+            if (el.closest('#waitingBench')) {
+                return { zone: 'bench', clientX, clientY };
+            }
+            const slot = el.closest('#doublesGrid .doubles-slot');
+            if (!slot) return null;
+            const mode = slot.dataset.lineupMode === 'doubles' ? 'doubles' : 'singles';
+            const flat = Number(slot.dataset.flatIdx);
+            if (!Number.isFinite(flat)) return null;
+            return {
+                zone: 'lineup',
+                mode,
+                flat,
+                teamIdx: slot.dataset.teamIdx != null ? Number(slot.dataset.teamIdx) : undefined,
+                slotIdx: slot.dataset.slotIdx != null ? Number(slot.dataset.slotIdx) : flat
+            };
+        }
+
+        function positionPlayerCardGhost(clientX, clientY) {
+            const ghost = playerCardPointerDrag.ghost;
+            if (!ghost) return;
+            ghost.style.left = `${clientX - playerCardPointerDrag.ghostOffsetX}px`;
+            ghost.style.top = `${clientY - playerCardPointerDrag.ghostOffsetY}px`;
+        }
+
+        function createPlayerCardGhost(card, clientX, clientY) {
+            const rect = card.getBoundingClientRect();
+            const ghost = card.cloneNode(true);
+            ghost.classList.add('player-card-drag-ghost');
+            ghost.classList.remove(
+                'player-card-draggable',
+                'waiting-drag-source',
+                'waiting-slide',
+                'lineup-drag-source',
+                'dragging'
+            );
+            ghost.removeAttribute('id');
+            ghost.querySelectorAll('.card-del').forEach((btn) => btn.remove());
+            ghost.style.width = `${rect.width}px`;
+            ghost.style.height = `${rect.height}px`;
+            playerCardPointerDrag.ghostOffsetX = clientX - rect.left;
+            playerCardPointerDrag.ghostOffsetY = clientY - rect.top;
+            document.body.appendChild(ghost);
+            playerCardPointerDrag.ghost = ghost;
+            positionPlayerCardGhost(clientX, clientY);
+        }
+
+        function clearPlayerCardGhost() {
+            if (playerCardPointerDrag.ghost && playerCardPointerDrag.ghost.parentNode) {
+                playerCardPointerDrag.ghost.parentNode.removeChild(playerCardPointerDrag.ghost);
+            }
+            playerCardPointerDrag.ghost = null;
+        }
+
+        function startPlayerCardDockPreview(payload) {
+            if (payload.kind === 'bench') {
+                clearLineupDockDrag();
+                waitingDock.active = true;
+                waitingDock.playerId = payload.playerId;
+                waitingDock.insertIndex = 0;
+                beginWaitingDockDrag(payload.playerId);
+            } else if (payload.kind === 'singles' || payload.kind === 'doubles') {
+                clearWaitingDockDrag();
+                const fromFlat = payload.kind === 'singles'
+                    ? Number(payload.fromSlot)
+                    : (Number(payload.fromTeam) * 2 + Number(payload.fromSlot));
+                beginLineupDockDrag({
+                    mode: payload.kind,
+                    playerId: payload.playerId,
+                    fromFlat
+                });
             }
         }
+
+        function updatePlayerCardPointerHover(clientX, clientY) {
+            const payload = playerCardPointerDrag.payload;
+            if (!payload) return;
+            const target = resolvePlayerCardDropTarget(clientX, clientY);
+            if (target) playerCardPointerDrag.lastTarget = target;
+            if (!target) return;
+
+            if (target.zone === 'bench') {
+                if (lineupDock.active) clearLineupDockDrag();
+                if (!waitingDock.active) {
+                    if (payload.kind === 'bench') {
+                        beginWaitingDockDrag(payload.playerId);
+                    } else {
+                        const track = document.getElementById('waitingBenchTrack');
+                        const bench = document.getElementById('waitingBench');
+                        if (track) track.classList.add('is-reordering');
+                        if (bench) bench.classList.add('drag-over');
+                        waitingDock.active = true;
+                        waitingDock.playerId = null;
+                    }
+                }
+                applyWaitingDockSlides(waitingInsertIndexFromX(clientX));
+                return;
+            }
+
+            onLineupSlotDragOver(null, { mode: target.mode, flat: target.flat });
+        }
+
+        function commitPlayerCardPointerDrop(target, payload) {
+            if (!payload || !target) {
+                clearWaitingDockDrag();
+                clearLineupDockDrag();
+                return;
+            }
+            if (target.zone === 'bench') {
+                clearLineupDockDrag();
+                commitWaitingDockDrop(payload);
+                return;
+            }
+            const toFlat = lineupDock.active ? lineupDock.toFlat : target.flat;
+            clearLineupDockDrag();
+            clearWaitingDockDrag();
+            if (target.mode === 'doubles') {
+                const toTeamDrop = Math.floor(toFlat / 2);
+                const toSlotDrop = toFlat % 2;
+                if (payload.kind === 'doubles'
+                    && Number(payload.fromTeam) === toTeamDrop
+                    && Number(payload.fromSlot) === toSlotDrop) return;
+                sendLineupDrop(payload, { mode: 'doubles', teamIdx: toTeamDrop, slotIdx: toSlotDrop });
+                return;
+            }
+            if (payload.kind === 'singles' && Number(payload.fromSlot) === toFlat) return;
+            sendLineupDrop(payload, { mode: 'singles', slotIdx: toFlat });
+        }
+
+        function resetPlayerCardPointerDrag() {
+            const card = playerCardPointerDrag.card;
+            const pointerId = playerCardPointerDrag.pointerId;
+            if (card && pointerId != null) {
+                try { card.releasePointerCapture(pointerId); } catch (_) {}
+            }
+            if (card) card.classList.remove('dragging');
+            clearPlayerCardGhost();
+            document.body.classList.remove('is-player-card-dragging');
+            playerCardPointerDrag.tracking = false;
+            playerCardPointerDrag.active = false;
+            playerCardPointerDrag.pointerId = null;
+            playerCardPointerDrag.payload = null;
+            playerCardPointerDrag.card = null;
+            playerCardPointerDrag.lastTarget = null;
+        }
+
+        function endPlayerCardPointerDrag(clientX, clientY, cancelled) {
+            if (!playerCardPointerDrag.tracking && !playerCardPointerDrag.active) return;
+            const payload = playerCardPointerDrag.payload;
+            const wasActive = playerCardPointerDrag.active;
+            const target = playerCardPointerDrag.lastTarget
+                || (wasActive ? resolvePlayerCardDropTarget(clientX, clientY) : null);
+            resetPlayerCardPointerDrag();
+            if (!wasActive || cancelled || !payload) {
+                clearWaitingDockDrag();
+                clearLineupDockDrag();
+                return;
+            }
+            commitPlayerCardPointerDrop(target, payload);
+        }
+
+        function onPlayerCardPointerMove(e) {
+            if (!playerCardPointerDrag.tracking || e.pointerId !== playerCardPointerDrag.pointerId) return;
+            const dx = e.clientX - playerCardPointerDrag.startX;
+            const dy = e.clientY - playerCardPointerDrag.startY;
+
+            if (!playerCardPointerDrag.active) {
+                if (Math.hypot(dx, dy) < PLAYER_CARD_DRAG_THRESHOLD_PX) return;
+                playerCardPointerDrag.active = true;
+                document.body.classList.add('is-player-card-dragging');
+                try {
+                    playerCardPointerDrag.card.setPointerCapture(playerCardPointerDrag.pointerId);
+                } catch (_) {}
+                createPlayerCardGhost(
+                    playerCardPointerDrag.card,
+                    e.clientX,
+                    e.clientY
+                );
+                playerCardPointerDrag.card.classList.add('dragging');
+                startPlayerCardDockPreview(playerCardPointerDrag.payload);
+            }
+
+            if (e.cancelable) e.preventDefault();
+            positionPlayerCardGhost(e.clientX, e.clientY);
+            updatePlayerCardPointerHover(e.clientX, e.clientY);
+        }
+
+        function onPlayerCardPointerUp(e) {
+            if (!playerCardPointerDrag.tracking || e.pointerId !== playerCardPointerDrag.pointerId) return;
+            endPlayerCardPointerDrag(e.clientX, e.clientY, false);
+        }
+
+        function onPlayerCardPointerCancel(e) {
+            if (!playerCardPointerDrag.tracking || e.pointerId !== playerCardPointerDrag.pointerId) return;
+            endPlayerCardPointerDrag(e.clientX, e.clientY, true);
+        }
+
+        function beginPlayerCardPointerTrack(e, card, p, dragMeta) {
+            if (e.button != null && e.button !== 0) return;
+            if (e.target && e.target.closest && e.target.closest('.card-del')) return;
+            if (playerCardPointerDrag.tracking) return;
+
+            playerCardPointerDrag.tracking = true;
+            playerCardPointerDrag.active = false;
+            playerCardPointerDrag.pointerId = e.pointerId;
+            playerCardPointerDrag.startX = e.clientX;
+            playerCardPointerDrag.startY = e.clientY;
+            playerCardPointerDrag.payload = buildDragPayload(p, dragMeta);
+            playerCardPointerDrag.card = card;
+            playerCardPointerDrag.lastTarget = null;
+        }
+
+        document.addEventListener('pointermove', onPlayerCardPointerMove, { passive: false });
+        document.addEventListener('pointerup', onPlayerCardPointerUp);
+        document.addEventListener('pointercancel', onPlayerCardPointerCancel);
 
         function buildPlayerCardElement(p, dragMeta) {
             const card = document.createElement('div');
@@ -4259,11 +4527,10 @@
             card.dataset.playerId = p.id;
             const delBtn = card.querySelector('.card-del');
             if (delBtn) {
-                delBtn.addEventListener('mousedown', (e) => e.stopPropagation());
-                delBtn.addEventListener('dragstart', (e) => e.preventDefault());
+                delBtn.addEventListener('pointerdown', (e) => e.stopPropagation());
             }
             if (dragMeta) {
-                card.draggable = true;
+                card.classList.add('player-card-draggable');
                 if (dragMeta.kind === 'bench') {
                     card.dataset.bench = '1';
                 } else if (dragMeta.kind === 'singles') {
@@ -4272,62 +4539,8 @@
                     card.dataset.teamIdx = String(dragMeta.teamIdx);
                     card.dataset.slotIdx = String(dragMeta.slotIdx);
                 }
-                card.addEventListener('dragstart', (e) => {
-                    if (e.target && e.target.closest && e.target.closest('.card-del')) {
-                        e.preventDefault();
-                        return;
-                    }
-                    const payload = { playerId: p.id, kind: dragMeta.kind };
-                    if (dragMeta.kind === 'bench') {
-                        payload.fromTeam = LINEUP_BENCH;
-                        payload.fromSlot = LINEUP_BENCH;
-                    } else if (dragMeta.kind === 'singles') {
-                        payload.fromSlot = dragMeta.slotIdx;
-                        payload.fromTeam = LINEUP_BENCH;
-                    } else {
-                        payload.fromTeam = dragMeta.teamIdx;
-                        payload.fromSlot = dragMeta.slotIdx;
-                    }
-                    e.dataTransfer.setData('text/plain', JSON.stringify(payload));
-                    e.dataTransfer.effectAllowed = 'move';
-                    // Always ghost the whole card (not the avatar <img> under the cursor)
-                    const rect = card.getBoundingClientRect();
-                    e.dataTransfer.setDragImage(card, e.clientX - rect.left, e.clientY - rect.top);
-                    card.classList.add('dragging');
-                    if (dragMeta.kind === 'bench') {
-                        clearLineupDockDrag();
-                        waitingDock.active = true;
-                        waitingDock.playerId = p.id;
-                        waitingDock.insertIndex = 0;
-                        // Defer collapse so the browser can snapshot the drag image first
-                        requestAnimationFrame(() => {
-                            if (!waitingDock.active || waitingDock.playerId !== p.id) return;
-                            beginWaitingDockDrag(p.id);
-                        });
-                    } else if (dragMeta.kind === 'singles' || dragMeta.kind === 'doubles') {
-                        clearWaitingDockDrag();
-                        const fromFlat = dragMeta.kind === 'singles'
-                            ? dragMeta.slotIdx
-                            : (dragMeta.teamIdx * 2 + dragMeta.slotIdx);
-                        lineupDock.active = true;
-                        lineupDock.mode = dragMeta.kind;
-                        lineupDock.playerId = p.id;
-                        lineupDock.fromFlat = fromFlat;
-                        lineupDock.toFlat = fromFlat;
-                        requestAnimationFrame(() => {
-                            if (!lineupDock.active || lineupDock.playerId !== p.id) return;
-                            beginLineupDockDrag({
-                                mode: dragMeta.kind,
-                                playerId: p.id,
-                                fromFlat
-                            });
-                        });
-                    }
-                });
-                card.addEventListener('dragend', () => {
-                    card.classList.remove('dragging');
-                    clearWaitingDockDrag();
-                    clearLineupDockDrag();
+                card.addEventListener('pointerdown', (e) => {
+                    beginPlayerCardPointerTrack(e, card, p, dragMeta);
                 });
             }
             return card;
@@ -4365,56 +4578,12 @@
             slotEl.dataset.lineupMode = 'doubles';
             slotEl.dataset.teamIdx = String(toTeam);
             slotEl.dataset.slotIdx = String(toSlot);
-            slotEl.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                onLineupSlotDragOver(e, { mode: 'doubles', flat, teamIdx: toTeam, slotIdx: toSlot });
-            });
-            slotEl.addEventListener('dragleave', (e) => {
-                if (!slotEl.contains(e.relatedTarget)) {
-                    slotEl.classList.remove('drag-over', 'lineup-insert-target');
-                }
-            });
-            slotEl.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const payload = parseDragPayload(e);
-                const toFlat = lineupDock.active ? lineupDock.toFlat : flat;
-                clearLineupDockDrag();
-                if (!payload) return;
-                const toTeamDrop = Math.floor(toFlat / 2);
-                const toSlotDrop = toFlat % 2;
-                if (payload.kind === 'doubles'
-                    && Number(payload.fromTeam) === toTeamDrop
-                    && Number(payload.fromSlot) === toSlotDrop) return;
-                sendLineupDrop(payload, { mode: 'doubles', teamIdx: toTeamDrop, slotIdx: toSlotDrop });
-            });
         }
 
         function bindSinglesSlotDrop(slotEl, toSlot) {
             slotEl.dataset.flatIdx = String(toSlot);
             slotEl.dataset.lineupMode = 'singles';
             slotEl.dataset.slotIdx = String(toSlot);
-            slotEl.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                onLineupSlotDragOver(e, { mode: 'singles', flat: toSlot, slotIdx: toSlot });
-            });
-            slotEl.addEventListener('dragleave', (e) => {
-                if (!slotEl.contains(e.relatedTarget)) {
-                    slotEl.classList.remove('drag-over', 'lineup-insert-target');
-                }
-            });
-            slotEl.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const payload = parseDragPayload(e);
-                const toFlat = lineupDock.active ? lineupDock.toFlat : toSlot;
-                clearLineupDockDrag();
-                if (!payload) return;
-                if (payload.kind === 'singles' && Number(payload.fromSlot) === toFlat) return;
-                sendLineupDrop(payload, { mode: 'singles', slotIdx: toFlat });
-            });
         }
 
         function seedTeamsFromPlayers(players) {
@@ -4847,54 +5016,15 @@
         }
 
         function renderRegistrationLineup(state) {
+            // State refresh rebuilds cards — abort any in-flight pointer drag
+            if (playerCardPointerDrag.tracking || playerCardPointerDrag.active) {
+                endPlayerCardPointerDrag(0, 0, true);
+            }
             const mode = state.lineupMode === 'doubles' ? 'doubles' : 'singles';
             applyLineupModeUI(mode);
             renderLineupRoster(state);
             renderWaitingBench(state);
         }
-
-        (function initWaitingBenchDrop() {
-            const bench = document.getElementById('waitingBench');
-            const track = document.getElementById('waitingBenchTrack');
-            if (!bench || !track) return;
-
-            function onDragOver(e) {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-                bench.classList.add('drag-over');
-                if (!waitingDock.active) {
-                    // Dragging in from seated lineup — open a gap without a collapsed source
-                    track.classList.add('is-reordering');
-                    waitingDock.active = true;
-                    waitingDock.playerId = null;
-                }
-                applyWaitingDockSlides(waitingInsertIndexFromX(e.clientX));
-            }
-
-            bench.addEventListener('dragover', onDragOver);
-            track.addEventListener('dragover', onDragOver);
-
-            // Do NOT clear insert state on dragleave — browsers fire leave with
-            // relatedTarget=null right before drop, which was resetting insert to 0.
-            bench.addEventListener('dragleave', (e) => {
-                if (!bench.contains(e.relatedTarget)) bench.classList.remove('drag-over');
-            });
-
-            function onDrop(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const payload = parseDragPayload(e);
-                if (!payload) {
-                    clearWaitingDockDrag();
-                    return;
-                }
-                commitWaitingDockDrop(payload);
-            }
-            bench.addEventListener('drop', onDrop);
-            track.addEventListener('drop', onDrop);
-
-            document.addEventListener('dragend', clearWaitingDockDrag);
-        })();
 
         (function initLineupModeToggle() {
             const buttons = document.querySelectorAll('.lineup-mode-btn');

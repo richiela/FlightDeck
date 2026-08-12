@@ -190,7 +190,7 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 
 ## Unreleased — since FlightDeck.v0.18.5
 
-- None yet.
+- Control registration: player cards (waiting bench + singles/doubles lineup) use **pointer drag** instead of HTML5 DnD so **iPad finger** can reorder / seat players the same way a mouse can (HTML5 drag-and-drop does not fire for touch on iPadOS Safari)
 
 
 

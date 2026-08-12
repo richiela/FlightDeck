@@ -188,11 +188,14 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 - Cleanup (`event-videos.css`): collapsed the three copy-pasted "multi-mode takeover" blocks (`.cricket-takeover`, `.killer-takeover`, `.sh-takeover` — each ~35 lines of identical split/stage/video-pane overrides, differing only in selector) into one shared rule set with combined selectors. Same selectors, same declared properties, just deduplicated — mathematically equivalent CSS. No visual change — verified with before/after screenshots across all of Killer's split modes (became/lost/death/winner) and Cricket/Shanghai's winner mode, video-on and video-off; Cricket came back byte-identical, Killer/Shanghai diffs were only random video-clip content.
 - Cleanup (Harper Wins): `.hw-avatar` (event-card spotlight portrait, e.g. "Pattern Dart" overlay) now sized via `calc(var(--fc-avatar-overlay) - 20px)` instead of a hardcoded `120px`. Pixel-exact — 140 − 20 = 120 — verified 0px diff before/after on Triple/Bullseye/Miss event cards.
 
-## Unreleased — since FlightDeck.v0.18.5
+## v0.18.6 — FlightDeck.v0.18.6 (Aug 11, 2026)
 
 - Control registration: player cards (waiting bench + singles/doubles lineup) use **pointer drag** instead of HTML5 DnD so **iPad finger** can reorder / seat players the same way a mouse can (HTML5 drag-and-drop does not fire for touch on iPadOS Safari)
 - Control registration left panel: photo preview is the flexible middle (`min-height` 120px, shrinks first) so Register + Lineup buttons stay inside the gold box on shorter / non-fullscreen iPad viewports
 - Control lineup drag: drop on an **empty** slot places the player there; drop on an **occupied** slot **swaps** (bench→occupied sends the previous occupant back to Waiting). Replaces the old insert-shift / dock-pack behavior that made open seats feel blocked. Singles still caps at 6 seated (7th onto an empty slot still auto-promotes to doubles)
 
+## Unreleased — since FlightDeck.v0.18.6
+
+- None yet.
 
 

@@ -196,6 +196,19 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 
 ## Unreleased — since FlightDeck.v0.18.6
 
-- None yet.
-
+- **Bangkok** (Classic): new game — beds **20→1**, **6 darts** per bed (120 darts solo), marks on the live bed only (**S=1 / D=2 / T=3**); singles or doubles (max 6), solo-start allowed; Viewer shows big target, 18-mark tick row, 6 dart slots, and a 20→1 bed strip; next-player overlay for multiplayer only (solo skips straight to next-bed announce); light winner/draw screens
+- Bangkok Viewer: fix roster avatar call (`FC_renderPlayerBadge(avatar, name, …)` was passed the whole player object) and show the active thrower’s badge above the target
+- Bangkok Viewer: drop the 18-tick mark grid; keep the 6 dart slots; **Marks this bed** uses Cricket glyphs in groups of 3 (`/` / `X` / circled-X) instead of a numeric total; thrower sits as a clean circle beside the bed number (no square card chrome)
+- Bangkok Viewer: remove center avatar + bottom 20→1 strip; restore boxed left roster; dartboard beside bed number with live wedge lit in place (no pizza-pull — that left a hole and made 20 look wrong); main stage spaced out more
+- Bangkok Viewer: drop “Bed X of 20…”; under the big number, a fixed **6-slot marks tray** (room for 6 circled-X) fills **middle → out** as marks land
+- Bangkok dart slots: off-target hits no longer show as a red bare number (e.g. “11”); true miss → red **MISS**, wrong bed → muted number, scoring hit → gold S/D/T
+- Bangkok Viewer: replace under-number marks tray with a vertical **20→1** beds board (20 on top); each row has a box of **6 cricket mark slots** filled from the active thrower’s `bedScores`; current bed highlighted, future beds muted
+- Bangkok dart slots: any non-scoring throw shows red **MISS** again (no muted off-target number labels)
+- Bangkok Viewer: rebuild main stage — large board + aim number + live cricket marks for the current bed; **6 dart slots** only for this bed; slim **20→1** mark trail (glyphs only, no empty boxes); drop the full beds spreadsheet pane
+- Bangkok Viewer: strip to play surface only — aim number + lit board + 6 dart slots; drop marks under the aim and the bottom trail (history parked); lineup is a compact list (40px face + name + total), vertically centered
+- Bangkok Viewer: past-bed history as **board heat** — completed wedges glow lotus by marks from the active thrower’s `bedScores` (cold = 0 / hot ≈ 12+); current stays gold; future stays muted (no cricket trail / number grid)
+- Dart lights (Autodarts/OpenDarts): auto **off** only after board stays **Stopped ≥ 3s**; leaving Stopped (or any brief flap) cancels the pending off so reset/status bounce no longer blinks the LED
+- **New board provider: OpenDarts-3D** (`board/opendarts3d/`) — dart3d's multi-camera capture server (`ws://host:8788/api/events` + REST), default `10.0.0.181:8788` (the Mac Mini running camera capture, not the Synology other providers default to). Throw mapping uses dart3d's real ring vocabulary (`bull`/`outer_bull`/`single_inner`/`treble`/`single_outer`/`double`/`outside`, confirmed against `~/Projects/opendarts-3d/docs/LIVE_API.md` and `dart3d.geometry.board.sector_ring_for_point` directly, not guessed from samples). Selectable in Control's Board Debug provider dropdown alongside Autodarts/OpenDarts. Verified against the live instance: connects, parses `HELLO`, correctly derives status/calibration/websocket-client-count.
+  - Forward-compatible with an explicit bounce-out flag (checks `payload.bounceout`/`bounce_out` before falling back to today's `ok:false` inference) — dart3d doesn't have one yet but one's coming per Richie (2026-08-16).
+  - `sendCommand('correct', {visitId, index, sector, ring, source, note})` pushes an operator correction back to dart3d via its real `/api/visits/{id}/throws/{index}/correct` endpoint — the first half of "push corrections back." The other half (dart3d returning a *ranked* list of likely corrections from its per-engine disagreement, for Control's Correct Score UI to prepopulate) isn't in the API yet — not inventing a ranking from raw engine data ahead of that contract landing.
 

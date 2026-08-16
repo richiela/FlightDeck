@@ -18,6 +18,8 @@ const OVERLAY_EVENT_MS = 3000;
 const OVERLAY_ROUND_ANNOUNCE_MS = 3000;
 const QUACKSHOT_MAX_ROUNDS = 6;
 const SHANGHAI_MAX_ROUNDS = 8;
+const BANGKOK_MAX_BEDS = 20;
+const BANGKOK_DARTS_PER_BED = 6;
 const DERBY_MAX_ROUNDS = 8;
 const KILLER_MAX_ROUNDS = 12;
 const WARMUP_HISTORY_MAX = 50;
@@ -287,6 +289,10 @@ function resolveDebugAimNumber(gameData, gameType) {
 
     if (gameType === 'shanghai') {
         return shanghaiTargetNumber(gameData);
+    }
+
+    if (gameType === 'bangkok') {
+        return bangkokTargetNumber(gameData);
     }
 
     if (gameType === 'derby') {
@@ -588,6 +594,10 @@ function roundAnnounceInfo(gameType, round) {
         maxRounds = SHANGHAI_MAX_ROUNDS;
         eyebrow = 'SCROLL ROUND';
         subtitle = `AIM FOR ${r}`;
+    } else if (gameType === 'bangkok') {
+        maxRounds = BANGKOK_MAX_BEDS;
+        eyebrow = 'NEXT BED';
+        subtitle = `AIM FOR ${bangkokTargetForRound(r)}`;
     } else if (gameType === 'derby') {
         maxRounds = DERBY_MAX_ROUNDS;
         eyebrow = 'POST TIME';
@@ -842,6 +852,21 @@ function initGameData(gameType, players, options = {}) {
                 phase: makeRoundAnnouncePhase('shanghai', 1)
             };
         }
+        if (gameType === 'bangkok') {
+            const roster = buildDoublesPlayerRoster(options.doublesTeams, players, (base) => ({
+                ...base,
+                score: 0,
+                bedScores: bangkokEmptyBedScores()
+            }));
+            return {
+                gameType: 'bangkok',
+                ...roster,
+                ...doublesBase,
+                turnDarts: [],
+                currentRound: 1,
+                phase: makeRoundAnnouncePhase('bangkok', 1)
+            };
+        }
     }
 
     const ordered = shufflePlayers(players || []);
@@ -1001,6 +1026,24 @@ function initGameData(gameType, players, options = {}) {
                 isDoublesLineup: false,
                 throwerIndices: ordered.map(() => 0),
                 phase: makeRoundAnnouncePhase('shanghai', 1),
+                helpVisible: false,
+                lastThrow: null
+            };
+        case 'bangkok':
+            return {
+                gameType: 'bangkok',
+                players: ordered.map(p => ({
+                    ...slimPlayer(p),
+                    score: 0,
+                    bedScores: bangkokEmptyBedScores()
+                })),
+                activeIdx: 0,
+                throwsThisTurn: 0,
+                turnDarts: [],
+                currentRound: 1,
+                isDoublesLineup: false,
+                throwerIndices: ordered.map(() => 0),
+                phase: makeRoundAnnouncePhase('bangkok', 1),
                 helpVisible: false,
                 lastThrow: null
             };
@@ -2665,6 +2708,220 @@ function handleShanghaiThrow(gameData, throwSpec = null) {
     return shanghaiContinueAfterThrow(gameData);
 }
 
+/* ========== BANGKOK ========== */
+/* 20→1 beds, 6 darts each (120 darts solo). Marks on the live bed: S=1 D=2 T=3. */
+
+function bangkokEmptyBedScores() {
+    return Array.from({ length: BANGKOK_MAX_BEDS }, () => null);
+}
+
+function bangkokTargetForRound(round) {
+    const r = Math.min(Math.max(Number(round) || 1, 1), BANGKOK_MAX_BEDS);
+    return 21 - r;
+}
+
+function bangkokTargetNumber(gameData) {
+    return bangkokTargetForRound(gameData && gameData.currentRound);
+}
+
+function bangkokBedIndex(gameData) {
+    const round = Math.min(Math.max(gameData.currentRound || 1, 1), BANGKOK_MAX_BEDS);
+    return round - 1;
+}
+
+function bangkokMultChar(multiplier) {
+    return multiplier === 3 ? 'T' : multiplier === 2 ? 'D' : 'S';
+}
+
+function bangkokMakeDart(throwSpec, targetNumber) {
+    if (throwSpec) {
+        if (throwSpec.miss || throwSpec.number == null || throwSpec.number === 'bull') {
+            return {
+                label: throwSpec.miss ? 'MISS' : (throwSpec.number === 'bull' ? 'BULL' : '—'),
+                mult: null,
+                points: 0,
+                hit: false,
+                number: throwSpec.miss ? null : throwSpec.number,
+                multiplier: 1
+            };
+        }
+        const number = Number(throwSpec.number);
+        const multiplier = normalizeMultiplier(throwSpec.multiplier);
+        const hit = number === targetNumber;
+        const points = hit ? multiplier : 0; // marks, not dartboard score
+        return {
+            label: String(number),
+            mult: bangkokMultChar(multiplier),
+            points,
+            hit,
+            number,
+            multiplier
+        };
+    }
+
+    if (Math.random() < 0.12) {
+        return { label: 'MISS', mult: null, points: 0, hit: false, number: null, multiplier: 1 };
+    }
+    const hitTarget = Math.random() < 0.55;
+    const number = hitTarget ? targetNumber : (Math.floor(Math.random() * 20) + 1);
+    const roll = Math.random();
+    let multiplier = 1;
+    if (roll > 0.82) multiplier = 3;
+    else if (roll > 0.62) multiplier = 2;
+    const hit = number === targetNumber;
+    const points = hit ? multiplier : 0;
+    return {
+        label: String(number),
+        mult: bangkokMultChar(multiplier),
+        points,
+        hit,
+        number,
+        multiplier
+    };
+}
+
+function bangkokPushTurnDart(gameData, dart) {
+    if (!Array.isArray(gameData.turnDarts)) gameData.turnDarts = [];
+    gameData.turnDarts.push({
+        label: dart.hit ? `${dart.mult || 'S'}${dart.label}` : 'MISS',
+        mult: dart.hit ? dart.mult : null,
+        points: dart.points || 0,
+        hit: !!dart.hit
+    });
+    if (gameData.turnDarts.length > BANGKOK_DARTS_PER_BED) {
+        gameData.turnDarts = gameData.turnDarts.slice(-BANGKOK_DARTS_PER_BED);
+    }
+}
+
+function bangkokAdvanceTurn(gameData) {
+    doublesAdvanceThrowerAfterVisit(gameData, gameData.activeIdx);
+    gameData.throwsThisTurn = 0;
+    gameData.turnDarts = [];
+    gameData.activeIdx++;
+    if (gameData.activeIdx >= gameData.players.length) {
+        gameData.activeIdx = 0;
+        gameData.currentRound++;
+    }
+    gameData.lastThrow = null;
+    gameData.phase = makePhase('playing');
+    return { gameData, schedule: null };
+}
+
+function bangkokResolveMatch(gameData) {
+    const players = gameData.players || [];
+    let bestScore = -Infinity;
+    players.forEach(p => {
+        bestScore = Math.max(bestScore, p.score || 0);
+    });
+
+    const pool = players.filter(p => (p.score || 0) === bestScore);
+
+    if (pool.length > 1) {
+        gameData.phase = makePhase('draw', {
+            contenders: pool.map(p => doublesContenderFields(p)),
+            reason: 'score'
+        });
+        return { gameData, schedule: null };
+    }
+
+    const champ = pool[0] || players[0];
+    gameData.phase = makePhase('winner', {
+        ...doublesWinnerFields(champ),
+        reason: 'score',
+        score: champ ? (champ.score || 0) : 0,
+        beds: BANGKOK_MAX_BEDS
+    });
+    return { gameData, schedule: null };
+}
+
+function bangkokContinueAfterThrow(gameData) {
+    if ((gameData.throwsThisTurn || 0) < BANGKOK_DARTS_PER_BED) {
+        gameData.phase = makePhase('playing');
+        return { gameData, schedule: null };
+    }
+
+    const solo = (gameData.players || []).length <= 1;
+    let nextIdx = gameData.activeIdx + 1;
+    let nextRound = gameData.currentRound;
+    let wrapped = false;
+    if (nextIdx >= gameData.players.length) {
+        nextIdx = 0;
+        nextRound++;
+        wrapped = true;
+    }
+
+    if (nextRound > BANGKOK_MAX_BEDS) {
+        gameData.phase = makePhase('playing');
+        return {
+            gameData,
+            schedule: { delayMs: 600, next: 'bangkok_resolve_match' }
+        };
+    }
+
+    // Solo: skip next-player intermission; announce the next bed then resume
+    if (solo) {
+        gameData.throwsThisTurn = 0;
+        gameData.turnDarts = [];
+        gameData.activeIdx = 0;
+        gameData.currentRound = nextRound;
+        gameData.lastThrow = null;
+        gameData.phase = makeRoundAnnouncePhase('bangkok', nextRound);
+        return { gameData, schedule: scheduleAfterRoundAnnounce('bangkok') };
+    }
+
+    return scheduleRoundThenNextPlayer(
+        gameData,
+        'bangkok',
+        nextIdx,
+        nextRound,
+        wrapped,
+        { targetNumber: bangkokTargetForRound(nextRound) }
+    );
+}
+
+function handleBangkokThrow(gameData, throwSpec = null) {
+    if (gameData.phase.type !== 'playing') {
+        return { gameData, schedule: null };
+    }
+    if ((gameData.throwsThisTurn || 0) >= BANGKOK_DARTS_PER_BED) {
+        return { gameData, schedule: null };
+    }
+
+    const player = gameData.players[gameData.activeIdx];
+    if (!player) return { gameData, schedule: null };
+
+    const targetNumber = bangkokTargetNumber(gameData);
+    const dart = bangkokMakeDart(throwSpec, targetNumber);
+
+    gameData.throwsThisTurn = (gameData.throwsThisTurn || 0) + 1;
+    bangkokPushTurnDart(gameData, dart);
+
+    if (!Array.isArray(player.bedScores) || player.bedScores.length !== BANGKOK_MAX_BEDS) {
+        player.bedScores = bangkokEmptyBedScores();
+    }
+    const bedIdx = bangkokBedIndex(gameData);
+    const prior = player.bedScores[bedIdx];
+    const bedTotal = (prior == null ? 0 : prior) + (dart.points || 0);
+    player.bedScores[bedIdx] = bedTotal;
+    player.score = (player.score || 0) + (dart.points || 0);
+
+    const label = dart.hit ? `+${dart.points}` : 'MISS';
+
+    gameData.lastThrow = {
+        points: dart.points || 0,
+        hit: !!dart.hit,
+        label,
+        playerId: player.id,
+        playerName: doublesThrowerName(gameData, gameData.activeIdx),
+        number: dart.number,
+        multiplier: dart.multiplier,
+        targetNumber,
+        sector: throwSpec && throwSpec.sector ? throwSpec.sector : null
+    };
+
+    return bangkokContinueAfterThrow(gameData);
+}
+
 /* ========== CRICKET ========== */
 
 function cricketEmptyMarks() {
@@ -4062,6 +4319,7 @@ function applyScheduledAction(gameData, action) {
         case 'killer_show_next_after_round':
         case 'quackshot_show_next_after_round':
         case 'shanghai_show_next_after_round':
+        case 'bangkok_show_next_after_round':
         case 'cricket_show_next_after_round': {
             const gameType = String(action.next).replace('_show_next_after_round', '');
             const nextIdx = action.nextPlayerIndex != null ? action.nextPlayerIndex : 0;
@@ -4152,6 +4410,13 @@ function applyScheduledAction(gameData, action) {
             return { gameData, schedule: null };
         case 'shanghai_resolve_match':
             return shanghaiResolveMatch(gameData);
+        case 'bangkok_advance_turn':
+            return bangkokAdvanceTurn(gameData);
+        case 'bangkok_after_round_announce':
+            gameData.phase = makePhase('playing');
+            return { gameData, schedule: null };
+        case 'bangkok_resolve_match':
+            return bangkokResolveMatch(gameData);
         case 'cricket_advance_turn': {
             doublesAdvanceThrowerAfterVisit(gameData, gameData.activeIdx);
             gameData.throwsThisTurn = 0;
@@ -4263,6 +4528,8 @@ function handleGameAction(gameData, gameType, payload, options = {}) {
             return handleQuackshotThrow(gameData, throwSpec);
         case 'shanghai':
             return handleShanghaiThrow(gameData, throwSpec);
+        case 'bangkok':
+            return handleBangkokThrow(gameData, throwSpec);
         case 'cricket':
             return handleCricketThrow(gameData, throwSpec);
         case 'x01':
@@ -4344,6 +4611,7 @@ function buildDebugPreviewPhase(gameType, gameData, screen) {
             if (gameType === 'quackshot') max = QUACKSHOT_MAX_ROUNDS;
             else if (gameType === 'killer') max = KILLER_MAX_ROUNDS;
             else if (gameType === 'shanghai') max = SHANGHAI_MAX_ROUNDS;
+            else if (gameType === 'bangkok') max = BANGKOK_MAX_BEDS;
             else if (gameType === 'derby') max = DERBY_MAX_ROUNDS;
             else if (gameType === 'cricket') max = Math.max(1, Number(gameData && gameData.currentRound) || 1);
             return makeRoundAnnouncePhase(gameType, max);

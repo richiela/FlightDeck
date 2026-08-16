@@ -12,7 +12,8 @@ const ALL_GAMES = [
     'warmup',
     'quick10',
     'x01',
-    'cricket'
+    'cricket',
+    'bangkok'
 ];
 
 const DEFAULT_VENUE = {

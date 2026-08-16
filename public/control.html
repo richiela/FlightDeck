@@ -1825,9 +1825,11 @@
         .scolia-provider-row button:hover { border-color: var(--gold); color: var(--gold-glow); }
         .hub-scolia-panel[data-provider="autodarts"] .scolia-forward-row,
         .hub-scolia-panel[data-provider="opendarts"] .scolia-forward-row,
+        .hub-scolia-panel[data-provider="opendarts3d"] .scolia-forward-row,
         .hub-scolia-panel[data-provider="mock"] .scolia-forward-row,
         .hub-scolia-panel[data-provider="autodarts"] .scolia-scolia-only,
         .hub-scolia-panel[data-provider="opendarts"] .scolia-scolia-only,
+        .hub-scolia-panel[data-provider="opendarts3d"] .scolia-scolia-only,
         .hub-scolia-panel[data-provider="mock"] .scolia-scolia-only {
             display: none !important;
         }
@@ -2303,6 +2305,10 @@
                     <h3>Cricket</h3>
                     <p>Close 20–15 and bull. Score while opponents still have them open. Max 4 players or teams.</p>
                 </div>
+                <div class="game-card" data-game="bangkok" data-category="classic" hidden>
+                    <h3>Bangkok</h3>
+                    <p>Twenty beds from 20 down to 1. Six darts each — S/D/T count as marks. Highest total after 120 darts wins.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -2441,6 +2447,7 @@
                             <option value="scolia">Scolia</option>
                             <option value="autodarts">Autodarts</option>
                             <option value="opendarts">OpenDarts</option>
+                            <option value="opendarts3d">OpenDarts-3D</option>
                             <option value="mock">Mock</option>
                         </select>
                         <span id="boardNetworkFields" hidden>
@@ -2680,7 +2687,7 @@
         let activeGameCategory = 'social';
         let activeLayerId = 1;
         let activeBgGameKey = null;
-        const CLASSIC_GAMES = new Set(['warmup', 'quick10', 'x01', 'cricket']);
+        const CLASSIC_GAMES = new Set(['warmup', 'quick10', 'x01', 'cricket', 'bangkok']);
 
         function categoryForGame(gameKey) {
             return CLASSIC_GAMES.has(gameKey) ? 'classic' : 'social';
@@ -2828,7 +2835,8 @@
             shanghai: "url('/assets/shanghai/bg.jpg')",
             warmup: "url('/assets/warmup/bg.jpg')",
             quick10: "url('/assets/quick10/bg.jpg')",
-            harperwins: "url('/assets/harperwins/bg.jpg')"
+            harperwins: "url('/assets/harperwins/bg.jpg')",
+            bangkok: 'radial-gradient(circle at 50% 20%, #6b2d4a 0%, #2a1530 42%, #0e0814 100%)'
         };
         /* Portrait shanghai art — fill screen width; height crops top/bottom as needed. */
         const gameBackgroundSizes = {
@@ -2855,7 +2863,8 @@
             shanghai: 'radial-gradient(circle at 50% 28%, #c45a28 0%, #8a3a18 40%, #4a2010 100%)',
             warmup: 'radial-gradient(circle at 50% 28%, #f0b35a 0%, #d4893a 35%, #8a4a18 70%, #2a1810 100%)',
             quick10: 'radial-gradient(circle at 50% 28%, #3d8ec8 0%, #1a5080 40%, #0a2038 78%, #061018 100%)',
-            harperwins: 'radial-gradient(circle at 50% 28%, #c24a3a 0%, #8b2e28 40%, #3d1412 75%, #120808 100%)'
+            harperwins: 'radial-gradient(circle at 50% 28%, #c24a3a 0%, #8b2e28 40%, #3d1412 75%, #120808 100%)',
+            bangkok: 'radial-gradient(circle at 50% 20%, #6b2d4a 0%, #2a1530 42%, #0e0814 100%)'
         };
         const REGISTRATION_BG = "url('/assets/app/viewer_registration.png')";
 
@@ -2881,7 +2890,7 @@
             return gameKey === 'x01' ? 'X01' : 'Cricket';
         }
 
-        const SOLO_START_GAMES = new Set(['warmup', 'quick10', 'x01']);
+        const SOLO_START_GAMES = new Set(['warmup', 'quick10', 'x01', 'bangkok']);
 
         function gameAllowsSoloStart(gameKey) {
             return SOLO_START_GAMES.has(gameKey);
@@ -3020,7 +3029,7 @@
             if (boardProviderDirty) {
                 const v = select ? select.value : provider;
                 if (panel) panel.setAttribute('data-provider', v);
-                if (fields) fields.hidden = !(v === 'autodarts' || v === 'opendarts');
+                if (fields) fields.hidden = !(v === 'autodarts' || v === 'opendarts' || v === 'opendarts3d');
                 // Apply landed — server matches the dropdown; resume normal sync next tick
                 if (select && select.value === provider) boardProviderDirty = false;
                 else return;
@@ -3029,8 +3038,8 @@
             if (panel) panel.setAttribute('data-provider', provider);
             if (select && document.activeElement !== select) select.value = provider;
             const sel = select ? select.value : provider;
-            if (fields) fields.hidden = !(sel === 'autodarts' || sel === 'opendarts');
-            const net = (sel === 'opendarts' ? cfg.opendarts : cfg.autodarts) || {};
+            if (fields) fields.hidden = !(sel === 'autodarts' || sel === 'opendarts' || sel === 'opendarts3d');
+            const net = (sel === 'opendarts' ? cfg.opendarts : sel === 'opendarts3d' ? cfg.opendarts3d : cfg.autodarts) || {};
             if (host && document.activeElement !== host && net.host) host.value = net.host;
             if (port && document.activeElement !== port && net.port != null) port.value = net.port;
         }
@@ -4116,7 +4125,7 @@
                 const host = document.getElementById('boardNetworkHost');
                 const port = document.getElementById('boardNetworkPort');
                 const v = boardProviderSelect.value;
-                if (fields) fields.hidden = !(v === 'autodarts' || v === 'opendarts');
+                if (fields) fields.hidden = !(v === 'autodarts' || v === 'opendarts' || v === 'opendarts3d');
                 const panel = document.getElementById('hubScoliaPanel');
                 if (panel) panel.setAttribute('data-provider', v);
                 // Prefill defaults when switching provider in the UI
@@ -4125,6 +4134,10 @@
                     const od = cfg.opendarts || {};
                     if (host) host.value = od.host || '10.0.0.180';
                     if (port) port.value = od.port != null ? od.port : 8787;
+                } else if (v === 'opendarts3d') {
+                    const od3d = cfg.opendarts3d || {};
+                    if (host) host.value = od3d.host || '10.0.0.181';
+                    if (port) port.value = od3d.port != null ? od3d.port : 8788;
                 } else if (v === 'autodarts') {
                     const ad = cfg.autodarts || {};
                     if (host) host.value = ad.host || '10.0.0.90';

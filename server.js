@@ -516,7 +516,7 @@ function fourPlayerGameLabel(gameType) {
 }
 
 /** Warmup / Quick 10 / X01 may start with a single competitor; everyone else needs 2+. */
-const SOLO_START_GAMES = new Set(['warmup', 'quick10', 'x01']);
+const SOLO_START_GAMES = new Set(['warmup', 'quick10', 'x01', 'bangkok']);
 
 function gameAllowsSoloStart(gameType) {
     return SOLO_START_GAMES.has(gameType);
@@ -1369,7 +1369,8 @@ function getEnrichedScoliaState() {
         boardConfig: {
             provider,
             autodarts: boardCfg.autodarts,
-            opendarts: boardCfg.opendarts
+            opendarts: boardCfg.opendarts,
+            opendarts3d: boardCfg.opendarts3d
         },
         awaitingTakeout,
         readyToScore: boardReady && !awaitingTakeout,
@@ -1491,30 +1492,56 @@ function maybeWakeBoardForUiAction(action) {
     return boardWakeInFlight;
 }
 
+/** Autodarts/OpenDarts: only cut dart lights after Stopped holds (avoids reset/status flaps). */
+const LIGHTS_OFF_AFTER_STOPPED_MS = 3000;
+let lightsOffAfterStopTimer = null;
+
+function clearLightsOffAfterStopTimer(reason) {
+    if (!lightsOffAfterStopTimer) return;
+    clearTimeout(lightsOffAfterStopTimer);
+    lightsOffAfterStopTimer = null;
+    if (reason) {
+        logDebugEvent('LIGHTS', `cancel delayed off — ${reason}`);
+    }
+}
+
 function onAutodartsDetectionStopped(payload) {
     if (!isDetectionLightsProvider()) return;
     const provider = currentBoardProviderId() || 'board';
+    const statusLabel = (payload && payload.status) || 'Stopped';
     logDebugEvent(
         'BOARD_DETECTION_STOPPED',
-        `${provider} stopped (${(payload && payload.status) || 'Stopped'}) — lights off`
+        `${provider} stopped (${statusLabel}) — lights off in ${LIGHTS_OFF_AFTER_STOPPED_MS}ms if still stopped`
     );
     if (!dartLights) return;
-    Promise.resolve(dartLights.turnOff())
-        .then((result) => {
-            if (!result || !result.ok) {
-                logDebugEvent('LIGHTS', (result && result.error) || 'off failed after board stop');
-            }
-            broadcastLights();
-        })
-        .catch((err) => {
-            logDebugEvent('LIGHTS', err.message || 'off failed after board stop');
-            broadcastLights();
-        });
+
+    clearLightsOffAfterStopTimer();
+    lightsOffAfterStopTimer = setTimeout(() => {
+        lightsOffAfterStopTimer = null;
+        if (!isDetectionLightsProvider()) return;
+        if (!detectionBoardLooksStopped()) {
+            logDebugEvent('LIGHTS', 'skip delayed off — board no longer stopped');
+            return;
+        }
+        logDebugEvent('LIGHTS', `${provider} still stopped after ${LIGHTS_OFF_AFTER_STOPPED_MS}ms — lights off`);
+        Promise.resolve(dartLights.turnOff())
+            .then((result) => {
+                if (!result || !result.ok) {
+                    logDebugEvent('LIGHTS', (result && result.error) || 'off failed after board stop');
+                }
+                broadcastLights();
+            })
+            .catch((err) => {
+                logDebugEvent('LIGHTS', err.message || 'off failed after board stop');
+                broadcastLights();
+            });
+    }, LIGHTS_OFF_AFTER_STOPPED_MS);
 }
 
 function onAutodartsDetectionStarted(payload) {
     if (!isDetectionLightsProvider()) return;
     const provider = currentBoardProviderId() || 'board';
+    clearLightsOffAfterStopTimer('detection active again');
     logDebugEvent(
         'BOARD_DETECTION_STARTED',
         `${provider} active (${(payload && payload.status) || 'Ready'}) — lights on`
@@ -2590,6 +2617,8 @@ wss.on('connection', (ws) => {
                     delete process.env.AUTODARTS_PORT;
                     delete process.env.OPENDARTS_HOST;
                     delete process.env.OPENDARTS_PORT;
+                    delete process.env.OPENDARTS3D_HOST;
+                    delete process.env.OPENDARTS3D_PORT;
                     if (saved.config.provider === 'mock') {
                         process.env.SCOLIA_MODE = 'mock';
                     } else {
@@ -2601,6 +2630,8 @@ wss.on('connection', (ws) => {
                         where = ` @ ${saved.config.autodarts.host}:${saved.config.autodarts.port}`;
                     } else if (saved.config.provider === 'opendarts') {
                         where = ` @ ${saved.config.opendarts.host}:${saved.config.opendarts.port}`;
+                    } else if (saved.config.provider === 'opendarts3d') {
+                        where = ` @ ${saved.config.opendarts3d.host}:${saved.config.opendarts3d.port}`;
                     }
                     logDebugEvent(
                         'SET_BOARD_PROVIDER',

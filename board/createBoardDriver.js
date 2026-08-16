@@ -3,10 +3,11 @@ const path = require('path');
 const { createScoliaClient, isMockMode } = require('./scolia/scoliaClient');
 const { createAutodartsDriver } = require('./autodarts/autodartsDriver');
 const { createOpenDartsDriver } = require('./opendarts/opendartsDriver');
+const { createOpenDarts3DDriver } = require('./opendarts3d/opendarts3dDriver');
 
 /**
- * Load data/board.json — { provider, autodarts, opendarts }
- * Env wins: BOARD_PROVIDER, AUTODARTS_HOST/PORT, OPENDARTS_HOST/PORT
+ * Load data/board.json — { provider, autodarts, opendarts, opendarts3d }
+ * Env wins: BOARD_PROVIDER, AUTODARTS_HOST/PORT, OPENDARTS_HOST/PORT, OPENDARTS3D_HOST/PORT
  * SCOLIA_MODE=mock forces mock (via Scolia mock client).
  */
 function loadBoardConfig(dataDir) {
@@ -29,6 +30,7 @@ function loadBoardConfig(dataDir) {
 
     const ad = file.autodarts || {};
     const od = file.opendarts || {};
+    const od3d = file.opendarts3d || {};
 
     return {
         provider,
@@ -39,6 +41,10 @@ function loadBoardConfig(dataDir) {
         opendarts: {
             host: String(process.env.OPENDARTS_HOST || od.host || '10.0.0.180').trim(),
             port: Number(process.env.OPENDARTS_PORT || od.port || 8787)
+        },
+        opendarts3d: {
+            host: String(process.env.OPENDARTS3D_HOST || od3d.host || '10.0.0.181').trim(),
+            port: Number(process.env.OPENDARTS3D_PORT || od3d.port || 8788)
         },
         configPath
     };
@@ -60,6 +66,10 @@ function saveBoardConfig(dataDir, patch) {
         opendarts: {
             host: current.opendarts.host,
             port: current.opendarts.port
+        },
+        opendarts3d: {
+            host: current.opendarts3d.host,
+            port: current.opendarts3d.port
         }
     };
 
@@ -72,8 +82,12 @@ function saveBoardConfig(dataDir, patch) {
         if (patch.opendarts.host != null) next.opendarts.host = String(patch.opendarts.host).trim();
         if (patch.opendarts.port != null) next.opendarts.port = Number(patch.opendarts.port);
     }
+    if (patch.opendarts3d) {
+        if (patch.opendarts3d.host != null) next.opendarts3d.host = String(patch.opendarts3d.host).trim();
+        if (patch.opendarts3d.port != null) next.opendarts3d.port = Number(patch.opendarts3d.port);
+    }
 
-    // Convenience: when applying autodarts/opendarts, top-level host/port also accepted
+    // Convenience: when applying autodarts/opendarts/opendarts3d, top-level host/port also accepted
     if (nextProvider === 'autodarts' && (patch.host != null || patch.port != null)) {
         if (patch.host != null) next.autodarts.host = String(patch.host).trim();
         if (patch.port != null) next.autodarts.port = Number(patch.port);
@@ -82,8 +96,12 @@ function saveBoardConfig(dataDir, patch) {
         if (patch.host != null) next.opendarts.host = String(patch.host).trim();
         if (patch.port != null) next.opendarts.port = Number(patch.port);
     }
+    if (nextProvider === 'opendarts3d' && (patch.host != null || patch.port != null)) {
+        if (patch.host != null) next.opendarts3d.host = String(patch.host).trim();
+        if (patch.port != null) next.opendarts3d.port = Number(patch.port);
+    }
 
-    if (!['scolia', 'autodarts', 'opendarts', 'mock'].includes(next.provider)) {
+    if (!['scolia', 'autodarts', 'opendarts', 'opendarts3d', 'mock'].includes(next.provider)) {
         return { ok: false, error: `Unknown provider: ${next.provider}` };
     }
     if (!Number.isFinite(next.autodarts.port) || next.autodarts.port <= 0) {
@@ -91,6 +109,9 @@ function saveBoardConfig(dataDir, patch) {
     }
     if (!Number.isFinite(next.opendarts.port) || next.opendarts.port <= 0) {
         return { ok: false, error: 'Invalid OpenDarts port' };
+    }
+    if (!Number.isFinite(next.opendarts3d.port) || next.opendarts3d.port <= 0) {
+        return { ok: false, error: 'Invalid OpenDarts-3D port' };
     }
     try {
         fs.writeFileSync(configPath, `${JSON.stringify(next, null, 2)}\n`, 'utf8');
@@ -126,6 +147,18 @@ function createBoardDriver({ dataDir, onUpdate, onEvent, configOverride }) {
         return createOpenDartsDriver({
             host: config.opendarts.host,
             port: config.opendarts.port,
+            onUpdate,
+            onEvent
+        });
+    }
+
+    if (config.provider === 'opendarts3d') {
+        console.log(
+            `\x1b[36m[BOARD]\x1b[0m Provider: opendarts3d @ ${config.opendarts3d.host}:${config.opendarts3d.port}`
+        );
+        return createOpenDarts3DDriver({
+            host: config.opendarts3d.host,
+            port: config.opendarts3d.port,
             onUpdate,
             onEvent
         });

@@ -194,7 +194,7 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 - Control registration left panel: photo preview is the flexible middle (`min-height` 120px, shrinks first) so Register + Lineup buttons stay inside the gold box on shorter / non-fullscreen iPad viewports
 - Control lineup drag: drop on an **empty** slot places the player there; drop on an **occupied** slot **swaps** (bench→occupied sends the previous occupant back to Waiting). Replaces the old insert-shift / dock-pack behavior that made open seats feel blocked. Singles still caps at 6 seated (7th onto an empty slot still auto-promotes to doubles)
 
-## Unreleased — since FlightDeck.v0.18.6
+## v0.18.7 — FlightDeck.v0.18.7 (Aug 16, 2026)
 
 - **Bangkok** (Classic): new game — beds **20→1**, **6 darts** per bed (120 darts solo), marks on the live bed only (**S=1 / D=2 / T=3**); singles or doubles (max 6), solo-start allowed; Viewer shows big target, 18-mark tick row, 6 dart slots, and a 20→1 bed strip; next-player overlay for multiplayer only (solo skips straight to next-bed announce); light winner/draw screens
 - Bangkok Viewer: fix roster avatar call (`FC_renderPlayerBadge(avatar, name, …)` was passed the whole player object) and show the active thrower’s badge above the target
@@ -212,4 +212,8 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
   - `sendCommand('correct', {visitId, index, sector, ring, source, note})` pushes an operator correction back to dart3d via its real `/api/visits/{id}/throws/{index}/correct` endpoint.
 - OpenDarts-3D driver updated for the real `bounce_suspected` / `ranked_sectors` contract (dart3d's `feature/native-bounce-detection` branch, not yet merged to main or live on :8788 — `docs/ENGINES.md`'s "Bounce-out detection" / "Ranked sector candidates" sections). Replaced the earlier speculative `payload.bounceout`/`bounce_out` guess with the real, tri-state `bounce_suspected` field — a miss (`ok:false`) now reports sector `"bounceout"` when the primary engine's own native signal says `true`, otherwise falls through to the real `reason` string as before. `THROW_DETECTED`'s `ranked_sectors` (populated only when `primary_engine` is `"Uber"`, the only engine with >1 candidate to rank) is now surfaced as `lastThrow.rankedSectors`.
 - Control's existing Correct Score form now defaults to OpenDarts-3D's rank-2 candidate instead of the static S20/Inner default, when one exists (`lastThrow.rankedSectors`, Uber-only per above). No new UI — same number/multiplier/ring fields, just prepopulated with the next most-voted candidate so the common "the primary read was wrong, the second guess was right" case is one click. Applied once per correction session (not every state broadcast) so it never overwrites an operator's manual edit mid-correction; every other provider keeps today's static default unchanged.
+
+## Unreleased — since FlightDeck.v0.18.7
+
+- None yet.
 

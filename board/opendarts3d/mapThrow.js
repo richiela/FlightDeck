@@ -14,44 +14,40 @@
  * Autodarts uses here (board/autodarts/mapThrow.js) — SingleInner → sN
  * (+1 Quackshot duck), SingleOuter → SN (−1 splash). Ring, not a shared
  * "S5" string, is the real discriminator on both providers.
+ *
+ * `bounce_suspected` / `ranked_sectors` (added 2026-08-16 on dart3d's
+ * feature/native-bounce-detection branch — not yet merged to main, not
+ * yet what the live :8788 instance runs; see docs/ENGINES.md's "Bounce-out
+ * detection" / "Ranked sector candidates" sections for the full contract):
+ *   bounce_suspected: null | true | false — tri-state, per-engine native
+ *     signal. Does NOT override ok/sector/ring itself (each engine's own
+ *     unvalidated opinion, most informative when ok:false already). Only
+ *     used here to make a miss's `sector` label more specific.
+ *   ranked_sectors: null, or [{rank, sector, ring, votes}, ...] sorted by
+ *     votes desc, only ever populated when primary_engine is "Uber" (the
+ *     only engine with >1 candidate to rank) — every other engine reports
+ *     null (single-candidate, nothing to rank). Rank 1 always matches the
+ *     top-level sector/ring when ok:true. Scoring doesn't need this at
+ *     all — it's carried through untouched (mapThrow only reads sector/
+ *     ring/ok) so a future Correct Score UI can prepopulate its guess
+ *     with rank 2 when the operator says the primary read was wrong.
  */
-
-/**
- * A dart that isn't scored surfaces today as `ok: false` + `sector: null`
- * + a real `reason` string — LIVE_API.md's own "Gaps" section is explicit
- * that there is no dedicated bounce-out flag *yet*. Richie's said one is
- * coming (2026-08-16): once the API adds an explicit field, check it here
- * first, before falling back to the ok:false inference below — do not
- * delete the fallback when that lands, older/standalone dart3d instances
- * won't have the new field either.
- */
-function isExplicitBounceout(payload) {
-    return !!(payload && (payload.bounceout || payload.bounce_out));
-}
-
 function mapOpenDarts3DThrow(payload) {
     if (!payload || typeof payload !== 'object') {
         return { type: 'TRIGGER_SPECIFIC_THROW', miss: true };
     }
 
-    if (isExplicitBounceout(payload)) {
-        return {
-            type: 'TRIGGER_SPECIFIC_THROW',
-            miss: true,
-            sector: 'bounceout'
-        };
-    }
-
     const ring = payload.ring != null ? String(payload.ring).trim() : '';
     const sectorRaw = payload.sector != null ? String(payload.sector).trim() : '';
 
-    // ok:false is the current (pre-explicit-bounceout) miss signal — sector
-    // is always null alongside it per LIVE_API.md, but don't depend on that.
     if (payload.ok === false || ring === 'outside' || !ring) {
+        const bounceSuspected = payload.bounce_suspected === true;
         return {
             type: 'TRIGGER_SPECIFIC_THROW',
             miss: true,
-            sector: payload.reason ? String(payload.reason) : (ring || 'outside')
+            sector: bounceSuspected
+                ? 'bounceout'
+                : (payload.reason ? String(payload.reason) : (ring || 'outside'))
         };
     }
 
@@ -95,4 +91,4 @@ function mapOpenDarts3DThrow(payload) {
     return { type: 'TRIGGER_SPECIFIC_THROW', miss: true, sector: `${ring}:${sectorRaw}` };
 }
 
-module.exports = { mapOpenDarts3DThrow, isExplicitBounceout };
+module.exports = { mapOpenDarts3DThrow };

@@ -3961,7 +3961,48 @@
             if (row) row.classList.toggle('is-disabled', !usable);
         }
 
+        /**
+         * OpenDarts-3D only: when Uber is the primary engine and its 3 sub-engines split,
+         * THROW_DETECTED carries ranked_sectors — rank 2 is the next most-voted candidate
+         * (docs/ENGINES.md's "Ranked sector candidates"). Prepopulate the Correct Score
+         * form with it instead of the static S20/Inner default, so the common case (rank 1
+         * was wrong, rank 2 was right) is one click, not manual re-entry. null for every
+         * other provider, or when Uber only had one candidate (nothing to rank).
+         */
+        function openDarts3DSuggestedCorrection() {
+            if (!lastScoliaState || lastScoliaState.provider !== 'opendarts3d') return null;
+            const ranked = lastScoliaState.lastThrow && lastScoliaState.lastThrow.rankedSectors;
+            if (!Array.isArray(ranked)) return null;
+            const second = ranked.find((r) => r && r.rank === 2);
+            if (!second) return null;
+            const ring = String(second.ring || '');
+            if (ring === 'bull') return { number: 'bull', multiplier: 2, ringRadio: 'I' };
+            if (ring === 'outer_bull') return { number: 'bull', multiplier: 1, ringRadio: 'I' };
+            const n = second.sector != null ? String(second.sector) : '';
+            if (!n) return null;
+            if (ring === 'treble') return { number: n, multiplier: 3, ringRadio: 'I' };
+            if (ring === 'double') return { number: n, multiplier: 2, ringRadio: 'I' };
+            if (ring === 'single_inner') return { number: n, multiplier: 1, ringRadio: 'I' };
+            if (ring === 'single_outer') return { number: n, multiplier: 1, ringRadio: 'O' };
+            return null;
+        }
+
+        function applyCorrectionSuggestion() {
+            const suggestion = openDarts3DSuggestedCorrection();
+            if (!suggestion) return;
+            const numberSelect = document.getElementById('correctNumberSelect');
+            if (numberSelect) numberSelect.value = suggestion.number;
+            const multRadio = document.querySelector(`input[name="correctMultiplier"][value="${suggestion.multiplier}"]`);
+            if (multRadio) multRadio.checked = true;
+            const ringRadio = document.querySelector(`input[name="correctRing"][value="${suggestion.ringRadio}"]`);
+            if (ringRadio) ringRadio.checked = true;
+            updateCorrectRingEnabled();
+        }
+
         let correctScoreEmptyLocal = false;
+        // Apply the OD3D suggestion once per correction session (rising edge) — not every
+        // broadcast tick, so it doesn't stomp on an operator's manual adjustment mid-correction.
+        let correctScoreSuggestionApplied = false;
 
         function setCorrectScoreEmptyMode(isEmpty) {
             const panel = document.getElementById('correctScorePanel');
@@ -3988,6 +4029,12 @@
             const valEl = document.getElementById('correctScoreWasVal');
             const correcting = !!(state && state.scoreCorrection && state.scoreCorrection.active);
             if (correcting) correctScoreEmptyLocal = false;
+            if (!correcting) {
+                correctScoreSuggestionApplied = false;
+            } else if (!correctScoreSuggestionApplied) {
+                correctScoreSuggestionApplied = true;
+                applyCorrectionSuggestion();
+            }
             if (btn) {
                 // Always clickable on the in-game hub; empty state handled in the overlay.
                 btn.disabled = false;

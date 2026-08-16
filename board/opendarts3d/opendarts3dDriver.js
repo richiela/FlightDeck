@@ -231,10 +231,18 @@ function createOpenDarts3DDriver({ host, port, onUpdate, onEvent }) {
         lastThrowKey = key || lastThrowKey;
 
         const mapped = mapOpenDarts3DThrow(payload);
+        // bounceSuspected/rankedSectors: dart3d.docs/ENGINES.md's "Bounce-out detection" /
+        // "Ranked sector candidates" (feature/native-bounce-detection, not yet on main/live
+        // as of 2026-08-16). Surfaced explicitly (not just buried in raw) so a future Correct
+        // Score UI can read lastThrow.rankedSectors directly to prepopulate its best guess —
+        // rank 1 is the primary read already scored; rank 2+ is what to offer when an operator
+        // says that was wrong. null for every engine except Uber (nothing else has >1 candidate).
         state.lastThrow = {
             at: Date.now(),
             sector: payload.sector,
             ring: payload.ring,
+            bounceSuspected: payload.bounce_suspected != null ? payload.bounce_suspected : null,
+            rankedSectors: Array.isArray(payload.ranked_sectors) ? payload.ranked_sectors : null,
             mapped,
             raw: payload,
             source: 'opendarts3d'
@@ -246,6 +254,8 @@ function createOpenDarts3DDriver({ host, port, onUpdate, onEvent }) {
                 sector: payload.sector,
                 ring: payload.ring,
                 ok: payload.ok,
+                bounceSuspected: payload.bounce_suspected,
+                rankedSectors: payload.ranked_sectors,
                 visitIndex: payload.visit_index,
                 primaryEngine: payload.primary_engine,
                 source
@@ -306,8 +316,9 @@ function createOpenDarts3DDriver({ host, port, onUpdate, onEvent }) {
         if (type === 'VISIT_CLEARED') {
             // dart3d's turn-rotation signal — the closest analog to other providers'
             // TAKEOUT_FINISHED (reason:"takeout") or a manual reset (reason:"reset").
-            // No false-takeout concept here yet (see mapThrow.js's isExplicitBounceout
-            // comment for the sibling "coming soon" note on bounce-out).
+            // Still no false-takeout concept here — a bounce-out is a per-dart signal
+            // (THROW_DETECTED's bounce_suspected, see mapThrow.js), a different thing
+            // from a takeout that starts and then aborts partway through.
             lastThrowKey = '';
             lastVisitId = msg.visit_id != null ? msg.visit_id : lastVisitId;
             state.opendarts3d.visitId = lastVisitId;
@@ -541,11 +552,17 @@ function createOpenDarts3DDriver({ host, port, onUpdate, onEvent }) {
      * `correct` payload: { visitId, index, sector, ring, source, note } — pushes FlightDeck's
      * operator correction back to dart3d via POST /api/visits/{visitId}/throws/{index}/correct
      * (docs/LIVE_API.md). `ring` is required by that endpoint; `sector` is omitted for
-     * bull/outer_bull/outside. This is the first half of what Richie asked for (2026-08-16) —
-     * pushing the correction back. The other half — dart3d returning a *ranked* list of likely
-     * corrections (from its per-engine disagreement) so Control's Correct Score UI can
-     * prepopulate the most likely one — isn't in the API yet; do not invent a ranking here from
-     * the raw engines{} package data without that contract landing first.
+     * bull/outer_bull/outside.
+     *
+     * The ranked-candidates half of Richie's 2026-08-16 ask now has a real contract —
+     * THROW_DETECTED's `ranked_sectors` (see mapThrow.js's header comment and
+     * commitThrow()'s lastThrow.rankedSectors above), populated when primary_engine is
+     * "Uber" — but it's on dart3d's feature/native-bounce-detection branch, not yet
+     * merged to main or running on the live :8788 instance as of this writing. Once it's
+     * live: Control's Correct Score UI reads lastThrow.rankedSectors, offers rank 2 (or
+     * lower) as the prepopulated guess when the operator says rank 1 (the primary read)
+     * was wrong, and this function pushes whichever one they confirm — no change needed
+     * here, this endpoint already accepts any {sector, ring}.
      */
     async function pushCorrection(payload) {
         if (!payload || payload.visitId == null || payload.index == null || !payload.ring) {

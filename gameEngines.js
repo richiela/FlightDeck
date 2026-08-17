@@ -19,7 +19,14 @@ const OVERLAY_ROUND_ANNOUNCE_MS = 3000;
 const QUACKSHOT_MAX_ROUNDS = 6;
 const SHANGHAI_MAX_ROUNDS = 8;
 const BANGKOK_MAX_BEDS = 20;
+/** A board "visit" is 3 darts, same as every other game here and the real hardware's hard
+ *  limit (Scolia/Autodarts/OpenDarts/OpenDarts-3D all require a takeout after 3 — see e.g.
+ *  dart3d's own docs: "up to 3 darts (MAX_DARTS_PER_TURN, a hard rule of the game, not a
+ *  tunable)"). Bangkok's "6 darts per bed" is two of these visits back to back, with a
+ *  normal takeout in between — never one continuous 6-dart visit. */
+const BANGKOK_DARTS_PER_VISIT = 3;
 const BANGKOK_DARTS_PER_BED = 6;
+const BANGKOK_VISITS_PER_BED = BANGKOK_DARTS_PER_BED / BANGKOK_DARTS_PER_VISIT;
 const DERBY_MAX_ROUNDS = 8;
 const KILLER_MAX_ROUNDS = 12;
 const WARMUP_HISTORY_MAX = 50;
@@ -864,6 +871,7 @@ function initGameData(gameType, players, options = {}) {
                 ...doublesBase,
                 turnDarts: [],
                 currentRound: 1,
+                bangkokVisitInBed: 0,
                 phase: makeRoundAnnouncePhase('bangkok', 1)
             };
         }
@@ -1041,6 +1049,7 @@ function initGameData(gameType, players, options = {}) {
                 throwsThisTurn: 0,
                 turnDarts: [],
                 currentRound: 1,
+                bangkokVisitInBed: 0,
                 isDoublesLineup: false,
                 throwerIndices: ordered.map(() => 0),
                 phase: makeRoundAnnouncePhase('bangkok', 1),
@@ -2796,11 +2805,18 @@ function bangkokPushTurnDart(gameData, dart) {
 function bangkokAdvanceTurn(gameData) {
     doublesAdvanceThrowerAfterVisit(gameData, gameData.activeIdx);
     gameData.throwsThisTurn = 0;
-    gameData.turnDarts = [];
     gameData.activeIdx++;
     if (gameData.activeIdx >= gameData.players.length) {
         gameData.activeIdx = 0;
-        gameData.currentRound++;
+        if ((gameData.bangkokVisitInBed || 0) >= BANGKOK_VISITS_PER_BED - 1) {
+            // Everyone just finished their LAST visit on this bed — the bed is done.
+            gameData.bangkokVisitInBed = 0;
+            gameData.currentRound++;
+            gameData.turnDarts = []; // clear the bed's mark history only on a real bed change
+        } else {
+            // Everyone just finished visit N — start visit N+1, same bed, marks kept.
+            gameData.bangkokVisitInBed = (gameData.bangkokVisitInBed || 0) + 1;
+        }
     }
     gameData.lastThrow = null;
     gameData.phase = makePhase('playing');
@@ -2835,22 +2851,24 @@ function bangkokResolveMatch(gameData) {
 }
 
 function bangkokContinueAfterThrow(gameData) {
-    if ((gameData.throwsThisTurn || 0) < BANGKOK_DARTS_PER_BED) {
+    if ((gameData.throwsThisTurn || 0) < BANGKOK_DARTS_PER_VISIT) {
         gameData.phase = makePhase('playing');
         return { gameData, schedule: null };
     }
 
+    // This player's 3-dart visit is over — the takeout cycle happens here, same as every
+    // other game. Whether the BED changes (vs. just moving into the bed's 2nd visit) is
+    // decided below without mutating gameData yet; bangkokAdvanceTurn (fired later, after
+    // any intermission/round-announce) does the real state mutation from the same inputs.
     const solo = (gameData.players || []).length <= 1;
-    let nextIdx = gameData.activeIdx + 1;
-    let nextRound = gameData.currentRound;
-    let wrapped = false;
-    if (nextIdx >= gameData.players.length) {
-        nextIdx = 0;
-        nextRound++;
-        wrapped = true;
-    }
+    const wrapsToNextPlayer = gameData.activeIdx + 1 >= gameData.players.length;
+    const nextIdx = wrapsToNextPlayer ? 0 : gameData.activeIdx + 1;
+    const startingNextVisit = wrapsToNextPlayer
+        && (gameData.bangkokVisitInBed || 0) < BANGKOK_VISITS_PER_BED - 1;
+    const bedChanges = wrapsToNextPlayer && !startingNextVisit;
+    const nextRound = bedChanges ? gameData.currentRound + 1 : gameData.currentRound;
 
-    if (nextRound > BANGKOK_MAX_BEDS) {
+    if (bedChanges && nextRound > BANGKOK_MAX_BEDS) {
         gameData.phase = makePhase('playing');
         return {
             gameData,
@@ -2858,23 +2876,33 @@ function bangkokContinueAfterThrow(gameData) {
         };
     }
 
-    // Solo: skip next-player intermission; announce the next bed then resume
+    // Solo: no other player to hand off to — either resume straight into the bed's 2nd
+    // visit (after the takeout), or announce the new bed and resume.
     if (solo) {
         gameData.throwsThisTurn = 0;
-        gameData.turnDarts = [];
         gameData.activeIdx = 0;
-        gameData.currentRound = nextRound;
         gameData.lastThrow = null;
-        gameData.phase = makeRoundAnnouncePhase('bangkok', nextRound);
-        return { gameData, schedule: scheduleAfterRoundAnnounce('bangkok') };
+        if (bedChanges) {
+            gameData.bangkokVisitInBed = 0;
+            gameData.turnDarts = [];
+            gameData.currentRound = nextRound;
+            gameData.phase = makeRoundAnnouncePhase('bangkok', nextRound);
+            return { gameData, schedule: scheduleAfterRoundAnnounce('bangkok') };
+        }
+        gameData.bangkokVisitInBed = (gameData.bangkokVisitInBed || 0) + 1;
+        gameData.phase = makePhase('playing');
+        return { gameData, schedule: null };
     }
 
+    // Multiplayer: only a true bed change earns the big round-announce banner — wrapping
+    // from the last player's visit back to the first player for the bed's 2nd visit is
+    // just a normal next-player handoff, same as any mid-round turn.
     return scheduleRoundThenNextPlayer(
         gameData,
         'bangkok',
         nextIdx,
         nextRound,
-        wrapped,
+        bedChanges,
         { targetNumber: bangkokTargetForRound(nextRound) }
     );
 }
@@ -2883,7 +2911,7 @@ function handleBangkokThrow(gameData, throwSpec = null) {
     if (gameData.phase.type !== 'playing') {
         return { gameData, schedule: null };
     }
-    if ((gameData.throwsThisTurn || 0) >= BANGKOK_DARTS_PER_BED) {
+    if ((gameData.throwsThisTurn || 0) >= BANGKOK_DARTS_PER_VISIT) {
         return { gameData, schedule: null };
     }
 

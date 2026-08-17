@@ -215,5 +215,5 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 
 ## Unreleased — since FlightDeck.v0.18.7
 
-- None yet.
+- **Bangkok fix**: was scoring each bed as one continuous 6-dart visit, so the shared 3-dart takeout trigger (`server.js`, applies to every game, unmodified) fired mid-bed after the 3rd dart while Bangkok's own turn state still expected 3 more — the board got told to wait for a takeout it wasn't ready for. Fixed entirely in `gameEngines.js`: a bed is now two proper 3-dart visits (`BANGKOK_DARTS_PER_VISIT = 3`, matching the hard 3-dart-per-visit rule every other game and real board hardware already use — not a Bangkok exception), tracked via a new `bangkokVisitInBed` counter. Multiplayer is round-robin: all players throw visit 1 on the bed, wrap back for visit 2, *then* the bed advances (with the round-announce firing only on that real bed change, not on the visit-1→visit-2 handoff). Verified by driving the actual game engine directly through 13 darts in both solo and 2-player shapes — turn/visit/bed sequencing all correct, scores land exactly right (6 points each from 6 darts per bed, split 3+3).
 

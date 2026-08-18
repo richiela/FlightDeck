@@ -1165,7 +1165,7 @@ function currentPhaseType() {
         : null;
 }
 
-/** Active board driver id: scolia | autodarts | opendarts | mock */
+/** Active board driver id: scolia | autodarts | opendarts | opendarts3d | mock */
 function currentBoardProvider() {
     if (!scolia) return 'scolia';
     const board = typeof scolia.getPublicState === 'function' ? scolia.getPublicState() : {};
@@ -1173,11 +1173,12 @@ function currentBoardProvider() {
     if (raw === 'mock' || board.mode === 'mock') return 'mock';
     if (raw === 'autodarts') return 'autodarts';
     if (raw === 'opendarts') return 'opendarts';
+    if (raw === 'opendarts3d') return 'opendarts3d';
     return 'scolia';
 }
 
 const MANUAL_THROW_SOURCES = new Set(['debug', 'correct', 'bot']);
-const BOARD_THROW_SOURCES = new Set(['scolia', 'autodarts', 'opendarts', 'mock']);
+const BOARD_THROW_SOURCES = new Set(['scolia', 'autodarts', 'opendarts', 'opendarts3d', 'mock']);
 
 /** Resolve throw provenance for logs / dart records (real provider when from the board). */
 function resolveThrowSource(source) {
@@ -1417,7 +1418,7 @@ function currentBoardProviderId() {
 
 function isDetectionLightsProvider() {
     const provider = currentBoardProviderId();
-    return provider === 'autodarts' || provider === 'opendarts';
+    return provider === 'autodarts' || provider === 'opendarts' || provider === 'opendarts3d';
 }
 
 function detectionBoardLooksStopped() {
@@ -1435,6 +1436,11 @@ function detectionBoardLooksStopped() {
     if (provider === 'opendarts') {
         const od = pub.opendarts || {};
         return !od.running && /stop/i.test(String(od.status || pub.boardStatus || ''));
+    }
+    if (provider === 'opendarts3d') {
+        const od3d = pub.opendarts3d || {};
+        if (od3d.starting) return false;
+        return !od3d.running;
     }
     return false;
 }
@@ -1519,10 +1525,8 @@ function onAutodartsDetectionStopped(payload) {
     lightsOffAfterStopTimer = setTimeout(() => {
         lightsOffAfterStopTimer = null;
         if (!isDetectionLightsProvider()) return;
-        if (!detectionBoardLooksStopped()) {
-            logDebugEvent('LIGHTS', 'skip delayed off — board no longer stopped');
-            return;
-        }
+        // Timer only survives if BOARD_DETECTION_STARTED never arrived. Don't skip
+        // off just because the provider's "looks stopped" heuristic is messy (esp. 3D).
         logDebugEvent('LIGHTS', `${provider} still stopped after ${LIGHTS_OFF_AFTER_STOPPED_MS}ms — lights off`);
         Promise.resolve(dartLights.turnOff())
             .then((result) => {
@@ -2692,6 +2696,9 @@ server.listen(PORT, '0.0.0.0', () => {
     } else if (provider === 'opendarts') {
         const od = scoliaState.opendarts || {};
         console.log(`   Board: OpenDarts local @ ${od.host || '?'}:${od.port || '?'}`);
+    } else if (provider === 'opendarts3d') {
+        const od3d = scoliaState.opendarts3d || {};
+        console.log(`   Board: OpenDarts-3D local @ ${od3d.host || '?'}:${od3d.port || '?'}`);
     } else if (isMockMode() || scoliaState.mode === 'mock' || provider === 'mock') {
         console.log(`   Board: mock mode on port ${PORT} — Ready (no hardware)`);
     } else if (scoliaState.connection === 'unconfigured') {

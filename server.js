@@ -76,7 +76,7 @@ const DEMOLITION_ASSETS_DIR = path.join(__dirname, 'public', 'assets', 'demoliti
 const SHARED_ASSETS_DIR = path.join(__dirname, 'public', 'assets', 'shared');
 
 let venueConfig = loadVenueConfig(DATA_DIR);
-/** False until board driver (`scolia`) is created — guards venue→AD standby apply. */
+/** False until board driver (`boardDriver`) is created — guards venue→AD standby apply. */
 let boardDriverReady = false;
 
 function logVenueConfig(label = 'VENUE') {
@@ -1055,14 +1055,14 @@ function sectorForOpenDartsCorrect(payload) {
 /** Sync Correct Score Apply to OpenDarts visit (last dart index only). No-op for other providers. */
 function syncOpenDartsThrowCorrect(index, payload) {
     if (currentBoardProvider() !== 'opendarts') return;
-    if (!scolia || typeof scolia.sendCommand !== 'function') return;
+    if (!boardDriver || typeof boardDriver.sendCommand !== 'function') return;
     const idx = Number(index);
     if (!Number.isInteger(idx) || idx < 0 || idx > 2) {
         logDebugEvent('OPENDARTS_CORRECT', `skip — bad index ${index}`);
         return;
     }
     const sector = sectorForOpenDartsCorrect(payload);
-    Promise.resolve(scolia.sendCommand('throws/correct', { index: idx, sector }))
+    Promise.resolve(boardDriver.sendCommand('throws/correct', { index: idx, sector }))
         .then((result) => {
             if (!result || !result.ok) {
                 logDebugEvent(
@@ -1167,9 +1167,9 @@ function currentPhaseType() {
 
 /** Active board driver id: scolia | autodarts | opendarts | opendarts3d | mock */
 function currentBoardProvider() {
-    if (!scolia) return 'scolia';
-    const board = typeof scolia.getPublicState === 'function' ? scolia.getPublicState() : {};
-    const raw = String(scolia.provider || board.provider || board.mode || 'scolia').toLowerCase();
+    if (!boardDriver) return 'scolia';
+    const board = typeof boardDriver.getPublicState === 'function' ? boardDriver.getPublicState() : {};
+    const raw = String(boardDriver.provider || board.provider || board.mode || 'scolia').toLowerCase();
     if (raw === 'mock' || board.mode === 'mock') return 'mock';
     if (raw === 'autodarts') return 'autodarts';
     if (raw === 'opendarts') return 'opendarts';
@@ -1356,14 +1356,14 @@ function deriveHeaderStatus(base, awaitingTakeout) {
 }
 
 function getEnrichedScoliaState() {
-    const base = scolia.getPublicState();
+    const base = boardDriver.getPublicState();
     const boardCfg = loadBoardConfig(DATA_DIR);
     const boardReady = base.connection === 'open'
         && base.boardStatus === 'Ready'
         && base.boardPhase === 'Throw';
     const awaitingTakeout = !!boardSync.awaitingTakeout;
     const header = deriveHeaderStatus(base, awaitingTakeout);
-    const provider = scolia.provider || base.provider || base.mode || boardCfg.provider || 'scolia';
+    const provider = boardDriver.provider || base.provider || base.mode || boardCfg.provider || 'scolia';
     return {
         ...base,
         provider,
@@ -1411,9 +1411,9 @@ let dartLights = createTapoLights({
 });
 
 function currentBoardProviderId() {
-    if (!scolia) return null;
-    const pub = typeof scolia.getPublicState === 'function' ? scolia.getPublicState() : {};
-    return scolia.provider || pub.provider || pub.mode || null;
+    if (!boardDriver) return null;
+    const pub = typeof boardDriver.getPublicState === 'function' ? boardDriver.getPublicState() : {};
+    return boardDriver.provider || pub.provider || pub.mode || null;
 }
 
 function isDetectionLightsProvider() {
@@ -1423,7 +1423,7 @@ function isDetectionLightsProvider() {
 
 function detectionBoardLooksStopped() {
     if (!isDetectionLightsProvider()) return false;
-    const pub = scolia.getPublicState();
+    const pub = boardDriver.getPublicState();
     if (pub.boardStatus === 'Stopped') return true;
 
     const provider = currentBoardProviderId();
@@ -1454,7 +1454,12 @@ const BOARD_WAKE_SKIP = new Set([
     'BOARD_SET_LOG_PAUSED',
     'SCOLIA_SET_LOG_PAUSED',
     'TVM_COMPLETE',
-    'BUST_VIDEO_COMPLETE'
+    'BUST_VIDEO_COMPLETE',
+    // Manual Board Debug commands (start/stop/calibrate/reset/...) already talk straight to the
+    // board — the passive "wake a sleeping board" heuristic double-sends (e.g. start firing twice)
+    // and can actively fight an explicit stop/calibrate.
+    'BOARD_COMMAND',
+    'SCOLIA_COMMAND'
 ]);
 
 let boardWakeInFlight = null;
@@ -1470,7 +1475,7 @@ function maybeWakeBoardForUiAction(action) {
     boardWakeInFlight = Promise.resolve()
         .then(async () => {
             logDebugEvent('BOARD_WAKE', `UI ${action} — ${provider} was stopped; starting detection + lights`);
-            const startResult = await Promise.resolve(scolia.sendCommand('start'));
+            const startResult = await Promise.resolve(boardDriver.sendCommand('start'));
             if (startResult && startResult.ok === false) {
                 logDebugEvent('BOARD_WAKE', startResult.error || 'start failed', {
                     status: startResult.status,
@@ -1575,7 +1580,7 @@ function setAwaitingTakeout(value) {
 }
 
 function scoliaBoardIsPlayable() {
-    const s = scolia.getPublicState();
+    const s = boardDriver.getPublicState();
     return s.connection === 'open' && s.boardStatus === 'Ready';
 }
 
@@ -1583,12 +1588,12 @@ function prepareBoardForMatch() {
     if (!scoliaBoardIsPlayable()) {
         return { ok: false, error: 'Dartboard not ready. Wait until the board shows Ready.' };
     }
-    const s = scolia.getPublicState();
+    const s = boardDriver.getPublicState();
     if (s.boardPhase === 'Takeout' || boardSync.awaitingTakeout) {
-        scolia.sendCommand('RESET_PHASE');
+        boardDriver.sendCommand('RESET_PHASE');
     } else {
         // Clear any partial visit on the SBC before first throw
-        scolia.sendCommand('RESET_PHASE');
+        boardDriver.sendCommand('RESET_PHASE');
     }
     boardSync.awaitingTakeout = false;
     return { ok: true };
@@ -1742,7 +1747,7 @@ function applyThrowPayload(payload, source, profileOverride = null) {
         });
         if (dartSource === 'bot') {
             boardSync.awaitingTakeout = false;
-            scolia.sendCommand('RESET_PHASE');
+            boardDriver.sendCommand('RESET_PHASE');
             clearThrowQueue('Bot visit complete');
             broadcastScolia();
         }
@@ -1840,7 +1845,7 @@ function nudgeBotAutoThrow(reason) {
     // Human left takeout pending — bots can't pull darts, so clear for the bot's turn.
     if (boardSync.awaitingTakeout) {
         boardSync.awaitingTakeout = false;
-        scolia.sendCommand('RESET_PHASE');
+        boardDriver.sendCommand('RESET_PHASE');
         clearThrowQueue('Bot turn — cleared takeout wait');
         broadcastScolia();
     }
@@ -1867,7 +1872,7 @@ function runBotThrowTick(reason) {
 
     if (boardSync.awaitingTakeout) {
         boardSync.awaitingTakeout = false;
-        scolia.sendCommand('RESET_PHASE');
+        boardDriver.sendCommand('RESET_PHASE');
         broadcastScolia();
     }
 
@@ -1929,7 +1934,7 @@ function handleScoliaGameplayEvent(type, payload) {
         return;
     }
 
-    const board = scolia.getPublicState();
+    const board = boardDriver.getPublicState();
     if (board.boardStatus !== 'Ready') {
         logDebugEvent('BOARD_THROW_IGNORED', 'Board not Ready', { status: board.boardStatus, source: currentBoardProvider() });
         return;
@@ -1940,7 +1945,7 @@ function handleScoliaGameplayEvent(type, payload) {
     acceptScoringThrow(mapped, provider);
 }
 
-let scolia = createBoardDriver({
+let boardDriver = createBoardDriver({
     dataDir: DATA_DIR,
     onUpdate: broadcastScolia,
     onEvent: handleScoliaGameplayEvent
@@ -1949,14 +1954,14 @@ boardDriverReady = true;
 
 /** Push venue.autodartsStandbyMinutes to Autodarts BM (no-op for Scolia/mock). */
 function applyAutodartsStandbyFromVenue() {
-    if (!boardDriverReady || !scolia) return;
-    if (typeof scolia.setStandbyMinutes !== 'function') {
+    if (!boardDriverReady || !boardDriver) return;
+    if (typeof boardDriver.setStandbyMinutes !== 'function') {
         logDebugEvent('AD_STANDBY', 'skip — board provider has no setStandbyMinutes (not Autodarts)');
         return;
     }
     const mins = venueConfig.autodartsStandbyMinutes;
     logDebugEvent('AD_STANDBY', `applying venue standby ${mins}m → Board Manager`);
-    Promise.resolve(scolia.setStandbyMinutes(mins))
+    Promise.resolve(boardDriver.setStandbyMinutes(mins))
         .then((result) => {
             if (!result || !result.ok) {
                 logDebugEvent(
@@ -1980,21 +1985,21 @@ function applyAutodartsStandbyFromVenue() {
 function replaceBoardDriver(configOverride) {
     try {
         boardDriverReady = false;
-        if (scolia && typeof scolia.stop === 'function') scolia.stop();
+        if (boardDriver && typeof boardDriver.stop === 'function') boardDriver.stop();
     } catch (err) {
         console.warn('[BOARD] stop previous driver:', err.message);
     }
-    scolia = createBoardDriver({
+    boardDriver = createBoardDriver({
         dataDir: DATA_DIR,
         onUpdate: broadcastScolia,
         onEvent: handleScoliaGameplayEvent,
         configOverride
     });
     boardDriverReady = true;
-    scolia.start();
+    boardDriver.start();
     broadcastScolia();
     applyAutodartsStandbyFromVenue();
-    return scolia;
+    return boardDriver;
 }
 
 /** Debug: finish the current visit with random darts via the normal throw path (overlays keep their timers). */
@@ -2023,7 +2028,7 @@ function debugNextPlayer() {
     }
 
     // Board sync convenience only — do not flush overlay schedules or force playing.
-    scolia.sendCommand('RESET_PHASE');
+    boardDriver.sendCommand('RESET_PHASE');
     boardSync.awaitingTakeout = false;
 
     logDebugEvent('DEBUG_NEXT_PLAYER', `Visit throw(s) via normal path (${thrown} random dart(s))`, {
@@ -2561,7 +2566,7 @@ wss.on('connection', (ws) => {
                 case 'SCOLIA_COMMAND':
                 case 'BOARD_COMMAND': {
                     // Autodarts sendCommand is async; Scolia is sync — Promise.resolve covers both.
-                    Promise.resolve(scolia.sendCommand(request.command, request.payload))
+                    Promise.resolve(boardDriver.sendCommand(request.command, request.payload))
                         .then((result) => {
                             if (!result || !result.ok) {
                                 logDebugEvent(
@@ -2591,17 +2596,17 @@ wss.on('connection', (ws) => {
 
                 case 'SCOLIA_CLEAR_LOG':
                 case 'BOARD_CLEAR_LOG':
-                    scolia.clearLog();
+                    boardDriver.clearLog();
                     break;
 
                 case 'SCOLIA_SET_LOG_PAUSED':
                 case 'BOARD_SET_LOG_PAUSED':
-                    scolia.setLogPaused(!!request.paused);
+                    boardDriver.setLogPaused(!!request.paused);
                     break;
 
                 case 'SCOLIA_RECONNECT':
                 case 'BOARD_RECONNECT':
-                    scolia.reconnect();
+                    boardDriver.reconnect();
                     logDebugEvent('BOARD_RECONNECT', 'Manual reconnect requested from control.');
                     break;
 
@@ -2679,7 +2684,7 @@ wss.on('connection', (ws) => {
 });
 
 ensureDataDir();
-scolia.start();
+boardDriver.start();
 dartLights.start();
 applyAutodartsStandbyFromVenue();
 
@@ -2689,7 +2694,7 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`   Viewer display: https://localhost:${PORT}/viewer.html`);
     console.log(`   LAN access: use https://<your-ip>:${PORT}/ (accept the self-signed cert warning)`);
     const scoliaState = getEnrichedScoliaState();
-    const provider = scolia.provider || scoliaState.provider || scoliaState.mode || 'scolia';
+    const provider = boardDriver.provider || scoliaState.provider || scoliaState.mode || 'scolia';
     if (provider === 'autodarts') {
         const ad = scoliaState.autodarts || {};
         console.log(`   Board: Autodarts local @ ${ad.host || '?'}:${ad.port || '?'}`);

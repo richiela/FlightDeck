@@ -218,7 +218,12 @@ Mid-cycle prod deploy of the first Unreleased items (registration fade + min com
 - **Bangkok fix**: was scoring each bed as one continuous 6-dart visit, so the shared 3-dart takeout trigger (`server.js`, applies to every game, unmodified) fired mid-bed after the 3rd dart while Bangkok's own turn state still expected 3 more — the board got told to wait for a takeout it wasn't ready for. Fixed entirely in `gameEngines.js`: a bed is now two proper 3-dart visits (`BANGKOK_DARTS_PER_VISIT = 3`, matching the hard 3-dart-per-visit rule every other game and real board hardware already use — not a Bangkok exception), tracked via a new `bangkokVisitInBed` counter. Multiplayer is round-robin: all players throw visit 1 on the bed, wrap back for visit 2, *then* the bed advances (with the round-announce firing only on that real bed change, not on the visit-1→visit-2 handoff). Verified by driving the actual game engine directly through 13 darts in both solo and 2-player shapes — turn/visit/bed sequencing all correct, scores land exactly right (6 points each from 6 darts per bed, split 3+3).
 - Dart lights: OpenDarts-3D now counts as a detection-lights provider (stop/start actually drive the LED). Delayed auto-off no longer bails if the “still stopped?” check is messy — if Start never cancelled the 3s timer, lights go off. `detectionBoardLooksStopped` now treats 3D `!running` (and not `starting`) as stopped.
 
-## Unreleased — since FlightDeck.v0.18.8
+## v0.18.9 — FlightDeck.v0.18.9 (Aug 17, 2026)
+
+- Board Debug commands (Start/Stop/Calibrate/Reset) no longer double-fire: every WS action ran through a passive "wake a sleeping board" heuristic (`maybeWakeBoardForUiAction`) *before* dispatch, and manual `BOARD_COMMAND`/`SCOLIA_COMMAND` weren't in its skip list — so pressing Start while the board looked stopped sent `sendCommand('start')` once from the auto-wake and again from the button itself (OpenDarts-3D visibly opened its cameras twice). `BOARD_COMMAND`/`SCOLIA_COMMAND` added to `BOARD_WAKE_SKIP`; explicit board commands now talk to the board exactly once.
+- Renamed the module-level board driver variable `scolia` → `boardDriver` throughout `server.js` (36 sites) — cosmetic only, zero behavior change. It's held the active provider's driver (Scolia/Autodarts/OpenDarts/OpenDarts-3D/mock) since multi-provider support was added, but kept its original single-provider name. Provider-id string literals (`'scolia'`), `scoliaState`, `SCOLIA_COMMAND`, and the real `board/scolia/` module path are unaffected.
+
+## Unreleased — since FlightDeck.v0.18.9
 
 - None yet.
 
